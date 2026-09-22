@@ -1,0 +1,333 @@
+/* 7.2 POS. All storefront and register rules stay inside POS-specific wrappers. */
+
+.pos-shell.pos-login-page {
+  display: grid;
+  min-height: 100vh;
+  padding: 32px;
+  background:
+    radial-gradient(circle at 20% 10%, #1d4ed8, transparent 30%),
+    linear-gradient(135deg, #081a38, #0f2f62);
+  place-items: center;
+}
+
+.pos-shell .pos-login-card {
+  width: min(440px, 100%);
+  padding: 16px;
+  border: 0;
+  box-shadow: 0 30px 80px rgb(0 0 0 / 28%);
+}
+
+.pos-shell .pos-login-logo {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  color: #fff;
+  font-size: 28px;
+  background: #1677ff;
+  border-radius: 16px;
+  place-items: center;
+}
+
+.pos-shell .pos-back-link {
+  display: block;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pos-shell .pos-header {
+  display: flex;
+  padding-inline: 24px;
+  align-items: center;
+  gap: 24px;
+}
+
+.pos-shell .pos-header .ant-menu {
+  min-width: 260px;
+  flex: 1;
+}
+
+.pos-shell .pos-brand,
+.pos-shell .pos-user {
+  white-space: nowrap;
+}
+
+.pos-shell .pos-brand > .anticon {
+  color: #60a5fa;
+  font-size: 22px;
+}
+
+.pos-shell .pos-sale-content {
+  min-height: calc(100vh - 64px);
+  background: #edf1f6;
+}
+
+.pos-shell .pos-sale-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 440px;
+  min-height: calc(100vh - 64px);
+}
+
+.pos-shell .pos-catalog-pane {
+  min-width: 0;
+  padding: 24px;
+}
+
+.pos-shell .pos-barcode-input {
+  margin: 20px 0;
+}
+
+.pos-shell .pos-product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 14px;
+}
+
+.pos-shell .pos-product {
+  display: flex;
+  min-height: 190px;
+  padding: 12px;
+  flex-direction: column;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #dbe1ea;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+.pos-shell .pos-product:hover:not(:disabled) {
+  border-color: #1677ff;
+  box-shadow: 0 10px 24px rgb(15 23 42 / 9%);
+  transform: translateY(-2px);
+}
+
+.pos-shell .pos-product:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.pos-shell .pos-product__icon {
+  display: grid;
+  height: 84px;
+  margin-bottom: 10px;
+  font-size: 44px;
+  border-radius: 10px;
+  place-items: center;
+}
+
+.pos-shell .pos-product__name {
+  display: -webkit-box;
+  min-height: 42px;
+  overflow: hidden;
+  color: #172033;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.pos-shell .pos-product strong {
+  margin-top: auto;
+  color: #1677ff;
+}
+
+.pos-shell .pos-product small {
+  margin-top: 3px;
+  color: #64748b;
+}
+
+.pos-shell .pos-cart-pane {
+  display: flex;
+  min-height: calc(100vh - 64px);
+  padding: 20px;
+  flex-direction: column;
+  gap: 14px;
+  background: #fff;
+  border-left: 1px solid #dbe1ea;
+}
+
+.pos-shell .pos-cart-pane h4 {
+  margin: 0 !important;
+}
+
+.pos-shell .pos-cart-lines {
+  min-height: 240px;
+  margin-inline: -20px;
+  padding-inline: 20px;
+  overflow: auto;
+  flex: 1;
+}
+
+.pos-shell .pos-cart-line {
+  padding: 14px 0;
+  border-bottom: 1px solid #eef1f5;
+}
+
+.pos-shell .pos-cart-line .ant-input-number {
+  width: 55px;
+}
+
+.pos-shell .pos-unit-price {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.pos-shell .pos-cart-footer {
+  padding-top: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.pos-shell .pos-cart-footer h2,
+.pos-shell .pos-cart-footer h4 {
+  margin: 0 !important;
+}
+
+.pos-payment-modal .payment-total {
+  padding: 12px 0 22px;
+  text-align: center;
+}
+
+.pos-payment-modal .payment-total h1 {
+  margin: 4px 0 !important;
+  color: #1677ff;
+}
+
+.pos-payment-modal .pos-payment-methods {
+  display: flex;
+  width: 100%;
+}
+
+.pos-payment-modal .pos-payment-methods label {
+  flex: 1;
+  text-align: center;
+}
+
+.pos-shell .receipt-card {
+  width: min(520px, 100%);
+  margin: 0 auto;
+  box-shadow: 0 12px 36px rgb(15 23 42 / 10%);
+}
+
+.pos-shell .receipt-head,
+.pos-shell .receipt-thanks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.pos-shell .receipt-head h3 {
+  margin: 10px 0 2px !important;
+}
+
+.pos-shell .receipt-logo {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  color: #fff;
+  font-size: 22px;
+  background: #1677ff;
+  border-radius: 14px;
+  place-items: center;
+}
+
+.pos-shell .receipt-thanks {
+  gap: 6px;
+}
+
+.pos-shell .receipt-thanks > .anticon {
+  color: #16a34a;
+  font-size: 24px;
+}
+
+.pos-shell .receipt-barcode {
+  margin-top: 16px;
+  font-family: monospace;
+  font-size: 23px;
+  letter-spacing: 2px;
+  transform: scaleY(1.6);
+}
+
+@media (max-width: 900px) {
+  .pos-shell .pos-user .ant-typography,
+  .pos-shell .pos-user .ant-tag {
+    display: none;
+  }
+
+  .pos-shell .pos-sale-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pos-shell .pos-cart-pane {
+    min-height: auto;
+    border: 1px solid #dbe1ea;
+  }
+
+  .pos-shell .pos-product-grid {
+    grid-template-columns: repeat(3, minmax(130px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .pos-shell .pos-header {
+    padding-inline: 12px;
+    gap: 8px;
+  }
+
+  .pos-shell .pos-brand h4 {
+    font-size: 0;
+  }
+
+  .pos-shell .pos-brand h4::after {
+    font-size: 18px;
+    content: "POS";
+  }
+
+  .pos-shell .pos-header .ant-menu {
+    min-width: 0;
+  }
+
+  .pos-shell .pos-header .ant-menu-item:first-child {
+    display: none;
+  }
+
+  .pos-shell .pos-catalog-pane {
+    padding: 14px;
+  }
+
+  .pos-shell .pos-product-grid {
+    grid-template-columns: repeat(2, minmax(125px, 1fr));
+    gap: 10px;
+  }
+
+  .pos-shell .pos-cart-pane {
+    padding: 14px;
+  }
+
+  .pos-shell .pos-cart-lines {
+    margin-inline: -14px;
+    padding-inline: 14px;
+  }
+}
+
+@media print {
+  .pos-shell .no-print,
+  .pos-shell .pos-header {
+    display: none !important;
+  }
+
+  .pos-shell .page-content {
+    padding: 0;
+  }
+
+  .pos-shell .receipt-card {
+    width: 80mm;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .pos-shell .receipt-card .ant-card-body {
+    padding: 4mm;
+  }
+}

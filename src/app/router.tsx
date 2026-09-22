@@ -22,7 +22,7 @@ import {
   ProductDetailPage,
   ProductsPage,
 } from '../pages/customer/CustomerPages';
-import { PosPlaceholderPage } from '../pages/pos/PosPlaceholderPage';
+import { PosLoginPage, PosOverviewPage, PosReceiptPage, PosSalePage } from '../pages/pos/PosPages';
 import { AuthLayout } from '../layouts/AuthLayout';
 import { AuthPlaceholderPage } from '../pages/auth/AuthPlaceholderPage';
 import { adminRoutes } from './adminNavigation';
@@ -94,9 +94,11 @@ export function AppRouter() {
         <Route path="register" element={<AuthPlaceholderPage mode="register" />} />
       </Route>
 
+      <Route path="pos/login" element={<PosLoginPage />} />
       <Route path="pos" element={<PosLayout />}>
-        <Route index element={<PosPlaceholderPage title="POS Overview" />} />
-        <Route path="sale" element={<PosPlaceholderPage title="Bán hàng tại quầy" />} />
+        <Route index element={<PosOverviewPage />} />
+        <Route path="sale" element={<PosSalePage />} />
+        <Route path="receipts/:id" element={<PosReceiptPage />} />
       </Route>
 
       <Route path="admin" element={<AdminLayout />}>
