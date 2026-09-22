@@ -1,0 +1,88 @@
+/* Hallmark · macrostructure: Workbench · genre: modern-minimal · theme: existing Ant Design
+ * tone: utilitarian enterprise · anchor hue: cobalt blue · enrichment: none
+ * pre-emit critique: P5 H5 E5 S5 R5 V4
+ * contrast: pass · slop: pass
+ */
+
+.admin-list-page,
+.admin-products-page {
+  min-width: 0;
+}
+
+.admin-products-page {
+  overflow-x: clip;
+}
+
+.admin-products__sku,
+.admin-products__number {
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-products__sku,
+.admin-products__row-actions .ant-btn,
+.admin-products__row-actions .ant-dropdown-trigger {
+  white-space: nowrap;
+}
+
+.admin-products__product-copy,
+.admin-products__product-name {
+  min-width: 0;
+}
+
+.admin-products__product-name {
+  overflow-wrap: anywhere;
+}
+
+.admin-products__row-actions {
+  display: inline-flex;
+}
+
+.admin-products__table .ant-table-content,
+.admin-products__table .ant-table-body {
+  scrollbar-gutter: stable;
+}
+
+.admin-products__table .ant-table-thead > tr > th,
+.admin-products__table .ant-table-tbody > tr > td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-products__table .admin-products__product-copy {
+  overflow: hidden;
+}
+
+.admin-products__table .admin-products__row-actions {
+  max-width: 100%;
+}
+
+.admin-products__empty {
+  min-height: 280px;
+  padding: 48px 24px;
+}
+
+.admin-products__summary {
+  min-height: 24px;
+}
+
+@media (max-width: 40rem) {
+  .admin-products__row-actions .ant-btn:not(.ant-dropdown-trigger) span:not(.anticon) {
+    display: none;
+  }
+
+  .admin-products__empty {
+    min-height: 220px;
+    padding: 32px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-products-page *,
+  .admin-products-page *::before,
+  .admin-products-page *::after {
+    animation-duration: 150ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+}

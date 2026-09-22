@@ -1,0 +1,475 @@
+/* Hallmark · macrostructure: Workbench · genre: modern-minimal · theme: existing Ant Design tokens
+ * tone: compact ERP utility · navigation: N3 dual side rail · enrichment: none
+ * studied: yes · DNA-source: image (user reference)
+ * pre-emit critique: P5 H5 E5 S5 R5 V5
+ * contrast: pass (40–41) · nav: existing admin side-rail · footer: n/a · slop: pass (42–45)
+ * honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (49) · icons: pass (30)
+ * mobile: pass (34, 49, 50–57)
+ */
+
+.admin-materials-page {
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.admin-materials__workspace {
+  min-width: 0;
+  overflow: hidden;
+  background: var(--materials-color-bg-container);
+  border: 1px solid var(--materials-color-border);
+  border-radius: var(--materials-border-radius);
+}
+
+.admin-materials__toolbar-shell {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--materials-color-border);
+}
+
+.admin-materials__global-search {
+  width: min(340px, 100%);
+}
+
+.admin-materials__toolbar-actions {
+  justify-content: flex-end;
+}
+
+.admin-materials__toolbar-actions .ant-btn {
+  white-space: nowrap;
+}
+
+.admin-materials__range,
+.admin-materials__code {
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-materials__range {
+  white-space: nowrap;
+}
+
+.admin-materials__filters {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--materials-color-fill);
+  border-bottom: 1px solid var(--materials-color-border);
+}
+
+.admin-materials__group-filter {
+  width: min(260px, calc(100% - 32px));
+}
+
+.admin-materials__summary {
+  min-height: 36px;
+  padding: 7px 12px;
+  background: var(--materials-color-primary-bg);
+  border-bottom: 1px solid var(--materials-color-border);
+}
+
+.admin-materials__loading {
+  padding: 24px;
+}
+
+.admin-materials-page .ant-table-wrapper .ant-table-thead > tr > th,
+.admin-materials-page .ant-table-wrapper .ant-table-tbody > tr > td {
+  height: 42px;
+  padding: 7px 12px;
+}
+
+.admin-materials-page .ant-table-wrapper .ant-table-thead > tr > th {
+  height: 40px;
+  color: inherit;
+  font-weight: 600;
+  background: var(--materials-color-fill);
+  white-space: nowrap;
+}
+
+.admin-materials-page .ant-table-wrapper .ant-table-tbody > tr.ant-table-row-selected > td {
+  background: var(--materials-color-primary-bg);
+}
+
+.admin-materials__code,
+.admin-materials__code-input input,
+.admin-materials__row-actions .ant-btn {
+  white-space: nowrap;
+}
+
+.admin-materials__code-input input {
+  text-transform: uppercase;
+}
+
+.admin-materials__name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-materials__clickable-row {
+  cursor: pointer;
+}
+
+.admin-materials__clickable-row:focus-visible {
+  outline: 2px solid var(--materials-color-primary);
+  outline-offset: -2px;
+}
+
+.admin-materials__row-actions {
+  display: inline-flex;
+}
+
+.admin-materials__empty {
+  min-height: 280px;
+  padding: 48px 24px;
+}
+
+.admin-materials__pagination {
+  min-height: 52px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--materials-color-border);
+}
+
+.admin-materials__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 12px;
+  padding: 16px;
+}
+
+.admin-materials__grid-card {
+  min-width: 0;
+}
+
+.admin-materials__grid-copy {
+  min-width: 0;
+}
+
+.admin-materials__grid-copy .ant-typography {
+  margin: 4px 0 0;
+}
+
+.admin-materials__grid-card .ant-tag {
+  flex: 0 0 auto;
+  margin-inline-end: 0;
+}
+
+.admin-materials__grid-meta {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.admin-materials__grid-meta > div {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.admin-materials__grid-meta dt {
+  color: var(--materials-color-text-secondary);
+}
+
+.admin-materials__grid-meta dd {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-materials__grid-actions {
+  justify-content: flex-end;
+  padding-top: 4px;
+  border-top: 1px solid var(--materials-color-border);
+}
+
+.admin-materials__import-body {
+  display: grid;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.admin-material-create__primary-actions,
+.admin-material-create__commandbar {
+  align-items: center;
+}
+
+.admin-material-create__actionbar {
+  min-height: 32px;
+}
+
+.admin-material-create-page h2 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.admin-material-create__primary-actions .ant-btn,
+.admin-material-create__commandbar .ant-btn {
+  white-space: nowrap;
+}
+
+.admin-material-create__commandbar {
+  min-height: 46px;
+  padding: 6px 10px;
+  background: var(--materials-color-fill);
+  border: 1px solid var(--materials-color-border);
+  border-radius: 4px;
+}
+
+.admin-material-create__card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.admin-material-create__card .ant-card-body {
+  min-height: 0;
+}
+
+.admin-material-form__section .ant-form-item {
+  margin-bottom: 12px;
+}
+
+.admin-material-form__section .ant-form-item-label > label {
+  font-weight: 600;
+}
+
+.admin-material-create__image-block {
+  display: grid;
+  justify-items: start;
+  grid-template-columns: 132px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: var(--materials-color-fill);
+  border: 1px solid var(--materials-color-border);
+  border-radius: 4px;
+}
+
+.admin-material-create__image-block > .ant-typography {
+  grid-column: 1 / -1;
+}
+
+.admin-material-create__image-preview {
+  display: grid;
+  place-items: center;
+  width: 132px;
+  min-height: 112px;
+  color: var(--materials-color-text-secondary);
+  background: var(--materials-color-primary-bg);
+  border: 1px dashed var(--materials-color-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.admin-material-create__image-preview > .anticon {
+  color: var(--materials-color-primary);
+  font-size: 32px;
+}
+
+.admin-material-create__image-preview .ant-image,
+.admin-material-create__image-preview .ant-image-img {
+  display: block;
+  width: 100%;
+  height: 112px;
+  object-fit: contain;
+}
+
+.admin-material-create__advanced {
+  margin-top: 20px;
+  padding-top: 4px;
+}
+
+.admin-material-create__form-shell {
+  display: flex;
+  flex-direction: column;
+  height: clamp(360px, calc(100vh - 260px), 760px);
+  min-height: 0;
+}
+
+.admin-material-create__scroll-region {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.admin-material-form__sections {
+  min-width: 0;
+}
+
+.admin-material-form__section {
+  min-width: 0;
+  padding: 16px 20px 12px;
+}
+
+.admin-material-form__section-title.ant-typography,
+.admin-material-detail__section .ant-typography {
+  margin: 0 0 12px;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.admin-material-form__divider.ant-divider,
+.admin-material-detail__sections > .ant-divider {
+  margin: 0;
+}
+
+.admin-material-form__footer {
+  flex: 0 0 auto;
+  padding: 12px 20px;
+  background: var(--materials-color-fill);
+  border-top: 1px solid var(--materials-color-border);
+}
+
+.admin-material-form__check-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-material-form__check-grid .ant-form-item {
+  margin-bottom: 0;
+}
+
+.admin-material-form__inline-check .ant-form-item-control-input {
+  min-height: 32px;
+  align-items: center;
+}
+
+.admin-material-form__section .ant-input-number-input {
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-material-form-drawer .ant-drawer-body {
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.admin-material-form-drawer .admin-material-form__section {
+  padding: 16px 24px 12px;
+}
+
+.admin-material-detail__sections {
+  min-width: 0;
+}
+
+.admin-material-detail__section {
+  min-width: 0;
+  padding: 2px 0;
+}
+
+.admin-material-detail__sections > .ant-divider {
+  margin-block: 20px;
+}
+
+@media (min-width: 62rem) {
+  .admin-material-create-page {
+    height: calc(100dvh - 92px);
+  }
+
+  .admin-material-create-page > .ant-flex {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .admin-material-create__card {
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+
+  .admin-material-create__card .ant-card-body,
+  .admin-material-create__form-shell {
+    height: 100%;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 75rem) {
+  .admin-materials__toolbar {
+    align-items: stretch;
+  }
+
+  .admin-materials__toolbar-actions {
+    justify-content: flex-start;
+  }
+
+}
+
+@media (max-width: 56rem) {
+  .admin-material-form__check-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 40rem) {
+  .admin-materials__global-search {
+    width: 100%;
+  }
+
+  .admin-materials__toolbar-actions {
+    width: 100%;
+  }
+
+  .admin-materials__row-actions .ant-btn span:not(.anticon) {
+    display: none;
+  }
+
+  .admin-materials__pagination {
+    align-items: flex-start;
+  }
+
+  .admin-materials__empty {
+    min-height: 220px;
+    padding: 32px 16px;
+  }
+
+  .admin-material-create__primary-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .admin-material-form__section,
+  .admin-material-form-drawer .admin-material-form__section {
+    padding: 16px;
+  }
+}
+
+@media (pointer: coarse) {
+  .admin-material-create-page .ant-btn,
+  .admin-material-create-page .ant-input,
+  .admin-material-create-page .ant-input-number,
+  .admin-material-create-page .ant-select-selector,
+  .admin-material-create-page .ant-checkbox-wrapper {
+    min-height: 44px;
+  }
+
+  .admin-material-create-page .ant-input-number-input {
+    height: 42px;
+  }
+
+  .admin-material-create-page .ant-checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+@media print {
+  .admin-material-create__primary-actions,
+  .admin-material-create__commandbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-materials-page *,
+  .admin-materials-page *::before,
+  .admin-materials-page *::after {
+    animation-duration: 150ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+}
