@@ -12,8 +12,16 @@ import { AdminSalesPaymentsPage } from '../pages/admin/AdminSalesPaymentsPage';
 import { AdminSalesReceivablesPage } from '../pages/admin/AdminSalesReceivablesPage';
 import { AdminSupplierPayablesPage } from '../pages/admin/AdminSupplierPayablesPage';
 import { AdminSupplierPaymentsPage } from '../pages/admin/AdminSupplierPaymentsPage';
-import { CustomerHomePage } from '../pages/customer/CustomerHomePage';
-import { CustomerPlaceholderPage } from '../pages/customer/CustomerPlaceholderPage';
+import {
+  AccountPage,
+  CartPage,
+  CheckoutPage,
+  CustomerHomePage,
+  OrderDetailPage,
+  OrdersPage,
+  ProductDetailPage,
+  ProductsPage,
+} from '../pages/customer/CustomerPages';
 import { PosPlaceholderPage } from '../pages/pos/PosPlaceholderPage';
 import { AuthLayout } from '../layouts/AuthLayout';
 import { AuthPlaceholderPage } from '../pages/auth/AuthPlaceholderPage';
@@ -72,13 +80,13 @@ export function AppRouter() {
     <Routes>
       <Route element={<CustomerLayout />}>
         <Route index element={<CustomerHomePage />} />
-        <Route path="products" element={<CustomerPlaceholderPage title="Danh sách sản phẩm" description="7.1 Website khách hàng" />} />
-        <Route path="products/:id" element={<CustomerPlaceholderPage title="Chi tiết sản phẩm" description="7.1 Website khách hàng" />} />
-        <Route path="cart" element={<CustomerPlaceholderPage title="Giỏ hàng" description="7.1 Website khách hàng" />} />
-        <Route path="checkout" element={<CustomerPlaceholderPage title="Checkout" description="7.1 Website khách hàng" />} />
-        <Route path="orders" element={<CustomerPlaceholderPage title="Lịch sử đơn hàng" description="7.1 Website khách hàng" />} />
-        <Route path="orders/:id" element={<CustomerPlaceholderPage title="Chi tiết đơn hàng" description="7.1 Website khách hàng" />} />
-        <Route path="account" element={<CustomerPlaceholderPage title="Tài khoản khách hàng" description="7.1 Website khách hàng" />} />
+        <Route path="products" element={<ProductsPage />} />
+        <Route path="products/:id" element={<ProductDetailPage />} />
+        <Route path="cart" element={<CartPage />} />
+        <Route path="checkout" element={<CheckoutPage />} />
+        <Route path="orders" element={<OrdersPage />} />
+        <Route path="orders/:id" element={<OrderDetailPage />} />
+        <Route path="account" element={<AccountPage />} />
       </Route>
 
       <Route element={<AuthLayout />}>
