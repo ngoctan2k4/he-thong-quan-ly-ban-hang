@@ -3,15 +3,31 @@ import { AdminLayout } from '../layouts/AdminLayout';
 import { CustomerLayout } from '../layouts/CustomerLayout';
 import { PosLayout } from '../layouts/PosLayout';
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage';
+import { AdminCustomersPage } from '../pages/admin/AdminCustomersPage';
 import { AdminCatalogMasterPage } from '../pages/admin/AdminCatalogMasterPage';
+import {
+  AdminBranchesPage,
+  AdminCategoriesPage,
+  AdminUnitsPage,
+  AdminWarehousesPage,
+} from '../pages/admin/AdminCatalogV1Pages';
 import { AdminMaterialCreatePage } from '../pages/admin/AdminMaterialCreatePage';
 import { AdminMaterialsPage } from '../pages/admin/AdminMaterialsPage';
 import { AdminPlaceholderPage } from '../pages/admin/AdminPlaceholderPage';
 import { AdminProductsPage } from '../pages/admin/AdminProductsPage';
+import { AdminPriceListsPage } from '../pages/admin/AdminPriceListsPage';
+import { AdminSystemUsersPage } from '../pages/admin/AdminSystemUsersPage';
+import { AdminRolesPage } from '../pages/admin/AdminRolesPage';
+import { AdminPurchaseOrderFormPage } from '../pages/admin/AdminPurchaseOrderFormPage';
+import { AdminPurchaseOrdersPage } from '../pages/admin/AdminPurchaseOrdersPage';
+import { AdminGoodsReceiptFormPage } from '../pages/admin/AdminGoodsReceiptFormPage';
+import { AdminGoodsReceiptsPage } from '../pages/admin/AdminGoodsReceiptsPage';
+import { AdminSalesOrdersPage } from '../pages/admin/AdminSalesOrdersPage';
 import { AdminSalesPaymentsPage } from '../pages/admin/AdminSalesPaymentsPage';
 import { AdminSalesReceivablesPage } from '../pages/admin/AdminSalesReceivablesPage';
 import { AdminSupplierPayablesPage } from '../pages/admin/AdminSupplierPayablesPage';
 import { AdminSupplierPaymentsPage } from '../pages/admin/AdminSupplierPaymentsPage';
+import { AdminSuppliersPage } from '../pages/admin/AdminSuppliersPage';
 import {
   AccountPage,
   CartPage,
@@ -36,6 +52,30 @@ function getAdminRouteElement(route: (typeof adminRoutes)[number]) {
     return <AdminProductsPage />;
   }
 
+  if (route.screen === 'price-lists') {
+    return <AdminPriceListsPage />;
+  }
+
+  if (route.screen === 'system-users') {
+    return <AdminSystemUsersPage />;
+  }
+
+  if (route.screen === 'system-roles') {
+    return <AdminRolesPage />;
+  }
+
+  if (route.screen === 'product-categories') {
+    return <AdminCategoriesPage />;
+  }
+
+  if (route.screen === 'customers') {
+    return <AdminCustomersPage />;
+  }
+
+  if (route.screen === 'suppliers') {
+    return <AdminSuppliersPage />;
+  }
+
   if (route.screen === 'materials') {
     return <AdminMaterialsPage />;
   }
@@ -49,11 +89,30 @@ function getAdminRouteElement(route: (typeof adminRoutes)[number]) {
   }
 
   if (route.screen === 'units') {
-    return <AdminCatalogMasterPage variant="units" />;
+    return <AdminUnitsPage />;
   }
 
   if (route.screen === 'unit-conversions') {
     return <AdminCatalogMasterPage variant="unit-conversions" />;
+  }
+
+  if (route.screen === 'branches') {
+    return <AdminBranchesPage />;
+  }
+
+  if (route.screen === 'warehouses') {
+    return <AdminWarehousesPage />;
+  }
+
+  if (route.screen === 'sales-orders') {
+    const channel = route.path.endsWith('/website')
+      ? 'WEBSITE'
+      : route.path.endsWith('/pos')
+        ? 'POS'
+        : route.path.endsWith('/wholesale')
+          ? 'WHOLESALE'
+          : undefined;
+    return <AdminSalesOrdersPage channel={channel} />;
   }
 
   if (route.screen === 'sales-payments') {
@@ -70,6 +129,22 @@ function getAdminRouteElement(route: (typeof adminRoutes)[number]) {
 
   if (route.screen === 'supplier-payments') {
     return <AdminSupplierPaymentsPage />;
+  }
+
+  if (route.screen === 'purchase-orders') {
+    return <AdminPurchaseOrdersPage />;
+  }
+
+  if (route.screen === 'purchase-order-form') {
+    return <AdminPurchaseOrderFormPage />;
+  }
+
+  if (route.screen === 'goods-receipts') {
+    return <AdminGoodsReceiptsPage />;
+  }
+
+  if (route.screen === 'goods-receipt-form') {
+    return <AdminGoodsReceiptFormPage />;
   }
 
   return <AdminPlaceholderPage title={route.title} />;

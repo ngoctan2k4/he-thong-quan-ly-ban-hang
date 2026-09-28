@@ -1,0 +1,229 @@
+/* Hallmark · macrostructure: Operations ledger · genre: modern-minimal · theme: existing Ant Design
+ * tone: utilitarian technical · anchor hue: cobalt · enrichment: none · nav: existing N3 · footer: none
+ * pre-emit critique: P5 H5 E5 S5 R5 V4
+ * contrast: pass · mobile: verified 320 / 375 / 414 / 768
+ */
+
+.purchasing-page {
+  --purchase-warning: #d97706;
+  --purchase-danger: #dc2626;
+  --purchase-magenta: #c026d3;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.purchasing__code.ant-btn-link {
+  max-width: 100%;
+  height: auto;
+  padding: 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.purchasing__summary {
+  min-height: 24px;
+  font-variant-numeric: tabular-nums;
+}
+
+.purchasing-page .admin-page-heading__copy,
+.purchasing-page .admin-page-heading__description {
+  width: 100%;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.purchasing__loading {
+  min-height: 260px;
+  padding: 24px;
+}
+
+.purchasing__empty {
+  min-height: 260px;
+  padding: 40px 20px;
+}
+
+.purchasing__table .ant-table-content,
+.purchasing__table .ant-table-body,
+.purchasing-detail__table .ant-table-content,
+.purchasing-detail__table .ant-table-body {
+  scrollbar-gutter: stable;
+}
+
+.purchasing__table .ant-table-thead > tr > th,
+.purchasing__table .ant-table-tbody > tr > td,
+.purchasing-detail__table .ant-table-thead > tr > th,
+.purchasing-detail__table .ant-table-tbody > tr > td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.purchasing__table .ant-table-cell,
+.purchasing-detail__table .ant-table-cell,
+.purchasing-form .ant-input-number-input {
+  font-variant-numeric: tabular-nums;
+}
+
+.purchasing__row-actions .ant-btn,
+.purchasing-form__actions .ant-btn {
+  white-space: nowrap;
+}
+
+.purchasing-detail__tabs,
+.purchasing-detail__product {
+  min-width: 0;
+}
+
+.purchasing-detail__product .ant-typography {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.purchasing-receipt-row--shortage > td {
+  background: color-mix(in srgb, var(--purchase-warning) 8%, var(--admin-bg-container));
+}
+
+.purchasing-receipt-row--overage > td {
+  background: color-mix(in srgb, var(--admin-primary) 8%, var(--admin-bg-container));
+}
+
+.purchasing-receipt-row--damaged > td {
+  background: color-mix(in srgb, var(--purchase-danger) 9%, var(--admin-bg-container));
+}
+
+.purchasing-receipt-row--wrong_item > td {
+  background: color-mix(in srgb, var(--purchase-magenta) 8%, var(--admin-bg-container));
+}
+
+.purchasing-form {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.purchasing-form .ant-card,
+.purchasing-form > .ant-alert {
+  min-width: 0;
+}
+
+.purchasing-form__item {
+  position: relative;
+  min-width: 0;
+  padding: 12px 12px 0 36px;
+  background: var(--admin-fill);
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+}
+
+.purchasing-form__item--damaged {
+  background: color-mix(in srgb, var(--purchase-warning) 7%, var(--admin-bg-container));
+  border-color: color-mix(in srgb, var(--purchase-warning) 42%, var(--admin-border));
+}
+
+.purchasing-form__item-number {
+  position: absolute;
+  top: 15px;
+  left: 12px;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  color: var(--admin-text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--admin-bg-container);
+  border: 1px solid var(--admin-border);
+  border-radius: 50%;
+}
+
+.purchasing-form__order-context {
+  margin-block-end: 8px;
+  padding-block-end: 8px;
+  border-bottom: 1px solid var(--admin-border);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.purchasing-form__divider {
+  margin: 0;
+}
+
+.purchasing-form__actions {
+  padding: 12px;
+  background: var(--admin-bg-container);
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+}
+
+@media (max-width: 40rem) {
+  .purchasing-page .admin-page-heading__description,
+  .purchasing-form-page > .ant-flex > .ant-flex:first-child > div > .ant-typography-secondary {
+    display: none;
+  }
+
+  .purchasing__row-actions .ant-btn > span:not(.anticon) {
+    display: none;
+  }
+
+  .purchasing__empty,
+  .purchasing__loading {
+    min-height: 220px;
+    padding: 28px 16px;
+  }
+
+  .purchasing-detail__tabs .ant-tabs-nav-wrap {
+    overflow-x: auto;
+  }
+
+  .purchasing-form__item {
+    padding-inline: 12px;
+    padding-block-start: 40px;
+  }
+
+  .purchasing-form .ant-card-head-wrapper {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+
+  .purchasing-form .ant-card-extra {
+    margin-inline-start: 0;
+  }
+
+  .purchasing-form__actions {
+    align-items: stretch;
+  }
+
+  .purchasing-form__actions > .ant-flex {
+    width: 100%;
+  }
+
+  .purchasing-form__actions > .ant-flex .ant-btn {
+    flex: 1;
+  }
+}
+
+@media (pointer: coarse) {
+  .purchasing-page .ant-btn,
+  .purchasing-page .ant-input,
+  .purchasing-page .ant-input-affix-wrapper,
+  .purchasing-page .ant-input-number,
+  .purchasing-page .ant-select-selector,
+  .purchasing-page .ant-picker {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .purchasing-page *,
+  .purchasing-page *::before,
+  .purchasing-page *::after {
+    animation-duration: 150ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+}

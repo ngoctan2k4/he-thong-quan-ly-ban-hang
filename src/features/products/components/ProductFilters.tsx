@@ -3,13 +3,14 @@ import { Button, Col, Input, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import type {
   AdminProductFilters,
-  ProductCategoryOption,
+  ProductReferenceOption,
 } from '../adminProducts.model';
 import { initialAdminProductFilters } from '../adminProducts.model';
 
 interface ProductFiltersProps {
   filters: AdminProductFilters;
-  categories: ProductCategoryOption[];
+  categories: ProductReferenceOption[];
+  brands: string[];
   loading?: boolean;
   onChange: (filters: AdminProductFilters) => void;
   onReset: () => void;
@@ -18,6 +19,7 @@ interface ProductFiltersProps {
 export function ProductFilters({
   filters,
   categories,
+  brands,
   loading = false,
   onChange,
   onReset,
@@ -41,8 +43,8 @@ export function ProductFilters({
   const hasActiveFilters =
     filters.keyword !== initialAdminProductFilters.keyword ||
     filters.categoryId !== initialAdminProductFilters.categoryId ||
-    filters.status !== initialAdminProductFilters.status ||
-    filters.stock !== initialAdminProductFilters.stock;
+    filters.brand !== initialAdminProductFilters.brand ||
+    filters.status !== initialAdminProductFilters.status;
 
   return (
     <Row gutter={[12, 12]} align="middle">
@@ -51,9 +53,22 @@ export function ProductFilters({
           allowClear
           value={keyword}
           prefix={<SearchOutlined />}
-          placeholder="Tìm theo tên sản phẩm hoặc SKU"
-          aria-label="Tìm theo tên sản phẩm hoặc SKU"
+          placeholder="Tìm mã hàng, SKU, barcode hoặc tên"
+          aria-label="Tìm mã hàng, SKU, barcode hoặc tên"
           onChange={(event) => setKeyword(event.target.value)}
+        />
+      </Col>
+
+      <Col xs={24} sm={12} md={6} xl={4}>
+        <Select
+          allowClear
+          showSearch
+          value={filters.brand}
+          placeholder="Tất cả thương hiệu"
+          aria-label="Lọc theo thương hiệu"
+          options={brands.map((brand) => ({ value: brand, label: brand }))}
+          style={{ width: '100%' }}
+          onChange={(brand) => onChange({ ...filters, brand })}
         />
       </Col>
 
@@ -78,28 +93,12 @@ export function ProductFilters({
           style={{ width: '100%' }}
           options={[
             { value: 'ALL', label: 'Tất cả trạng thái' },
-            { value: 'ACTIVE', label: 'Đang bán' },
-            { value: 'INACTIVE', label: 'Ngừng bán' },
-            { value: 'OUT_OF_STOCK', label: 'Hết hàng' },
+            { value: 'ACTIVE', label: 'Đang kinh doanh' },
+            { value: 'DISCONTINUED', label: 'Ngừng kinh doanh' },
+            { value: 'HIDDEN', label: 'Đang ẩn' },
           ]}
           onChange={(status) =>
             onChange({ ...filters, status: status as AdminProductFilters['status'] })
-          }
-        />
-      </Col>
-
-      <Col xs={24} sm={12} md={6} xl={4}>
-        <Select
-          value={filters.stock}
-          aria-label="Lọc theo tình trạng tồn kho"
-          style={{ width: '100%' }}
-          options={[
-            { value: 'ALL', label: 'Tất cả tồn kho' },
-            { value: 'IN_STOCK', label: 'Còn hàng' },
-            { value: 'OUT_OF_STOCK', label: 'Hết hàng' },
-          ]}
-          onChange={(stock) =>
-            onChange({ ...filters, stock: stock as AdminProductFilters['stock'] })
           }
         />
       </Col>

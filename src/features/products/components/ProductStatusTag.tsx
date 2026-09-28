@@ -1,19 +1,19 @@
-import { CheckCircleOutlined, PauseCircleOutlined, StopOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, EyeInvisibleOutlined, StopOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import type { ReactNode } from 'react';
-import type { ProductStatus } from '../../../types/product';
+import type { AdminProductStatus } from '../adminProducts.model';
 
 const productStatusConfig: Record<
-  ProductStatus,
+  AdminProductStatus,
   { color: string; icon: ReactNode; label: string }
 > = {
-  ACTIVE: { color: 'green', icon: <CheckCircleOutlined />, label: 'Đang bán' },
-  INACTIVE: { color: 'default', icon: <PauseCircleOutlined />, label: 'Ngừng bán' },
-  OUT_OF_STOCK: { color: 'red', icon: <StopOutlined />, label: 'Hết hàng' },
+  ACTIVE: { color: 'green', icon: <CheckCircleOutlined />, label: 'Đang kinh doanh' },
+  DISCONTINUED: { color: 'default', icon: <StopOutlined />, label: 'Ngừng kinh doanh' },
+  HIDDEN: { color: 'orange', icon: <EyeInvisibleOutlined />, label: 'Đang ẩn' },
 };
 
 interface ProductStatusTagProps {
-  status: ProductStatus;
+  status: AdminProductStatus;
 }
 
 export function ProductStatusTag({ status }: ProductStatusTagProps) {

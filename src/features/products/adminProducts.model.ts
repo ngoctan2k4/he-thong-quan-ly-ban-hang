@@ -1,19 +1,38 @@
-import type { Product, ProductStatus } from '../../types/product';
+import type { ProductUnitConversion } from '../../types/catalog';
 
-export type ProductStatusFilter = 'ALL' | ProductStatus;
-export type ProductStockFilter = 'ALL' | 'IN_STOCK' | 'OUT_OF_STOCK';
+export type AdminProductStatus = 'ACTIVE' | 'DISCONTINUED' | 'HIDDEN';
+export type AdminProductStatusFilter = 'ALL' | AdminProductStatus;
 export type ProductFormMode = 'create' | 'edit';
 
-export interface AdminProductRecord extends Product {
+export interface AdminProductRecord {
+  id: number;
+  code: string;
+  sku: string;
+  barcode?: string;
+  name: string;
+  categoryId: number;
   categoryName: string;
+  brand?: string;
+  baseUnitId: number;
+  baseUnitName: string;
+  retailPrice: number;
+  wholesalePrice: number;
+  moq: number;
+  minStock: number;
+  maxStock?: number;
+  safetyStock: number;
+  reorderPoint: number;
+  status: AdminProductStatus;
+  isActive: boolean;
+  createdAt: string;
   updatedAt: string;
 }
 
 export interface AdminProductFilters {
   keyword: string;
   categoryId?: number;
-  status: ProductStatusFilter;
-  stock: ProductStockFilter;
+  brand?: string;
+  status: AdminProductStatusFilter;
 }
 
 export interface AdminProductListResult {
@@ -24,27 +43,44 @@ export interface AdminProductListResult {
   totalPages: number;
 }
 
-export interface ProductCategoryOption {
+export interface ProductReferenceOption {
   value: number;
   label: string;
+  disabled?: boolean;
+}
+
+export interface ProductReferences {
+  categories: ProductReferenceOption[];
+  units: ProductReferenceOption[];
+  brands: string[];
 }
 
 export interface ProductFormValues {
+  code: string;
   sku: string;
+  barcode?: string;
   name: string;
   categoryId: number;
   brand?: string;
-  unit: string;
+  baseUnitId: number;
   retailPrice: number;
-  wholesalePrice?: number;
-  availableStock: number;
-  status: Exclude<ProductStatus, 'OUT_OF_STOCK'>;
-  imageUrl?: string;
+  wholesalePrice: number;
+  moq: number;
+  minStock: number;
+  maxStock?: number;
+  safetyStock: number;
+  reorderPoint: number;
+  status: AdminProductStatus;
+  isActive: boolean;
+}
+
+export interface ProductConversionView extends ProductUnitConversion {
+  unitName: string;
 }
 
 export const initialAdminProductFilters: AdminProductFilters = {
   keyword: '',
   categoryId: undefined,
+  brand: undefined,
   status: 'ALL',
-  stock: 'ALL',
 };

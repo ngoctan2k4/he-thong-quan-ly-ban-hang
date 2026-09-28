@@ -1,0 +1,59 @@
+.admin-system-users-page {
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.admin-system-users__username,
+.admin-system-users__date {
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-system-users__contact,
+.admin-system-users__roles {
+  min-width: 0;
+}
+
+.admin-system-users__table .ant-table-content,
+.admin-system-users__table .ant-table-body {
+  scrollbar-gutter: stable;
+}
+
+.admin-system-users__table .ant-table-thead > tr > th,
+.admin-system-users__table .ant-table-tbody > tr > td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-system-users__row-actions {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+.admin-system-users__empty {
+  min-height: 240px;
+  padding: 40px 16px;
+}
+
+.admin-system-users__loading {
+  padding: 24px;
+}
+
+.admin-system-users__scope-list .ant-list-item {
+  padding-inline: 0;
+}
+
+@media (max-width: 47.99rem) {
+  .admin-system-users__action-label {
+    display: none;
+  }
+
+  .admin-system-users__row-actions .ant-btn {
+    min-width: 30px;
+    padding-inline: 6px;
+  }
+
+  .admin-system-users__empty {
+    min-height: 200px;
+    padding: 28px 12px;
+  }
+}

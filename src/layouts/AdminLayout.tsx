@@ -6,6 +6,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import {
+  App,
   Avatar,
   Badge,
   Breadcrumb,
@@ -31,6 +32,8 @@ import {
   getAdminNavigationState,
   getAdminRouteByKey,
 } from '../app/adminNavigation';
+import { useCommerce } from '../features/commerce/CommerceContext';
+import { downloadSalesReportXlsx } from '../features/reports/salesReportExport';
 import './adminLayout.css';
 
 const { Header, Content } = Layout;
@@ -54,6 +57,8 @@ function getActiveModuleKey(openKeys: string[], selectedKeys: string[]) {
 export function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { message } = App.useApp();
+  const { customers, orders, products } = useCommerce();
   const screens = Grid.useBreakpoint();
   const { token } = theme.useToken();
   const navigationState = useMemo(
@@ -90,6 +95,18 @@ export function AdminLayout() {
 
   const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
     const route = getAdminRouteByKey(String(key));
+
+    if (route?.action === 'export-sales-report') {
+      try {
+        const fileName = downloadSalesReportXlsx({ orders, customers, products });
+        void message.success(`Đã xuất ${fileName}`);
+      } catch {
+        void message.error('Không thể xuất báo cáo Excel. Vui lòng thử lại.');
+      }
+      setMobileOpen(false);
+      return;
+    }
+
     if (route && route.path !== location.pathname) {
       navigate(route.path);
     }
@@ -231,7 +248,10 @@ export function AdminLayout() {
       >
         <div className="admin-module-rail">
           <div className="admin-module-rail__brand" aria-label="SalesHub Admin">
-            SH
+            <span className="admin-module-rail__brand-mark" aria-hidden="true">
+              SH
+            </span>
+            <span className="admin-module-rail__brand-label">SalesHub</span>
           </div>
 
           <nav className="admin-module-rail__modules" aria-label="Phân hệ quản trị">
@@ -245,7 +265,10 @@ export function AdminLayout() {
                   aria-current={isActive ? 'page' : undefined}
                   onClick={() => handleModuleClick(module.key, module.path)}
                 >
-                  {module.icon}
+                  <span className="admin-module-rail__icon" aria-hidden="true">
+                    {module.icon}
+                  </span>
+                  <span className="admin-module-rail__label">{module.label}</span>
                 </button>
               );
 
@@ -254,10 +277,8 @@ export function AdminLayout() {
                   <Popover
                     key={module.key}
                     placement="rightTop"
-                    trigger={['hover', 'focus']}
+                    trigger="click"
                     overlayClassName="admin-module-flyout"
-                    mouseEnterDelay={0.25}
-                    mouseLeaveDelay={0.15}
                     content={
                       <div className="admin-module-flyout__content">
                         <Typography.Text className="admin-module-flyout__title" strong>
@@ -276,6 +297,10 @@ export function AdminLayout() {
                     {moduleButton}
                   </Popover>
                 );
+              }
+
+              if (isCompactNavigation) {
+                return moduleButton;
               }
 
               return (

@@ -1,0 +1,68 @@
+.admin-access-control-page {
+  min-width: 0;
+}
+
+.admin-access-control__search {
+  width: min(100%, 520px);
+}
+
+.admin-access-control__loading {
+  padding: 24px;
+}
+
+.admin-access-control__empty {
+  padding: 32px 16px;
+}
+
+.admin-access-control__permission-checkbox-group {
+  display: block;
+  width: 100%;
+}
+
+.admin-access-control__permission-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.admin-access-control__permission-module {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.admin-access-control__permission-heading {
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.admin-access-control__permission-code {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.admin-access-control__permission-disabled {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.admin-access-control__granted {
+  color: #52c41a;
+}
+
+.admin-access-control__form-field {
+  flex: 1 1 280px;
+}
+
+@media (max-width: 767px) {
+  .admin-access-control__permission-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-access-control__search .ant-input-search-button span:not(.anticon) {
+    display: none;
+  }
+}

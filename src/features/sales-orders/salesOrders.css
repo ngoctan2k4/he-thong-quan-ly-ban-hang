@@ -1,0 +1,121 @@
+/* Hallmark · macrostructure: Index-First · genre: modern-minimal · theme: existing Ant Design
+ * tone: utilitarian enterprise · anchor hue: existing cobalt · enrichment: none
+ * pre-emit critique: P5 H5 E5 S5 R5 V4 · contrast: pass · slop: pass
+ */
+.sales-orders-page {
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.sales-orders__number,
+.sales-orders__code,
+.sales-order-detail__items-table,
+.sales-order-detail__payments-table,
+.sales-order-detail__totals {
+  font-variant-numeric: tabular-nums;
+}
+
+.sales-orders__code.ant-btn-link {
+  max-width: 100%;
+  height: auto;
+  padding: 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sales-orders__summary {
+  min-height: 24px;
+}
+
+.sales-orders__loading {
+  padding: 24px;
+}
+
+.sales-orders__table .ant-table-content,
+.sales-orders__table .ant-table-body,
+.sales-order-detail__items-table .ant-table-content,
+.sales-order-detail__payments-table .ant-table-content {
+  scrollbar-gutter: stable;
+}
+
+.sales-orders__table .ant-table-thead > tr > th,
+.sales-orders__table .ant-table-tbody > tr > td,
+.sales-order-detail__items-table .ant-table-thead > tr > th,
+.sales-order-detail__items-table .ant-table-tbody > tr > td,
+.sales-order-detail__payments-table .ant-table-thead > tr > th,
+.sales-order-detail__payments-table .ant-table-tbody > tr > td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sales-orders__empty {
+  min-height: 260px;
+  padding: 40px 20px;
+}
+
+.sales-order-detail__tabs {
+  min-width: 0;
+}
+
+.sales-order-detail__product {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sales-order-detail__product .ant-typography {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sales-order-detail__totals {
+  width: min(420px, 100%);
+  margin-inline-start: auto;
+}
+
+.sales-order-detail__totals .ant-descriptions-item-content {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.sales-order-detail__tabs .ant-card-head-title,
+.sales-order-detail__tabs .ant-descriptions-item-content {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 40rem) {
+  .sales-orders__table .ant-btn > span:not(.anticon) {
+    display: none;
+  }
+
+  .sales-orders__empty {
+    min-height: 220px;
+    padding: 28px 16px;
+  }
+
+  .sales-order-detail__tabs .ant-tabs-nav-wrap {
+    overflow-x: auto;
+  }
+}
+
+@media (pointer: coarse) {
+  .sales-orders-page .ant-btn,
+  .sales-orders-page .ant-input-affix-wrapper,
+  .sales-orders-page .ant-select-selector,
+  .sales-orders-page .ant-picker {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sales-orders-page *,
+  .sales-orders-page *::before,
+  .sales-orders-page *::after {
+    animation-duration: 150ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+}

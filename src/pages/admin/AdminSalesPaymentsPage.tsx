@@ -1,5 +1,6 @@
-import { PaymentTransactionsPage } from '../../features/payments/components/PaymentTransactionsPage';
+import { SalesPaymentsPage } from '../../features/sales-orders/components/SalesPaymentsPage';
+import '../../features/sales-orders/salesOrders.css';
 
 export function AdminSalesPaymentsPage() {
-  return <PaymentTransactionsPage side="CUSTOMER" />;
+  return <SalesPaymentsPage />;
 }

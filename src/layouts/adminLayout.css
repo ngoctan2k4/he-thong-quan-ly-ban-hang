@@ -13,6 +13,9 @@ body:has(.admin-shell),
 .admin-shell {
   --admin-font-display: "Bahnschrift", "Segoe UI", sans-serif;
   --admin-navigation-width: 240px;
+  --admin-module-rail-expanded-width: 216px;
+  --admin-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --admin-duration-short: 150ms;
   min-height: 100dvh;
   min-width: 0;
   flex-direction: row;
@@ -41,19 +44,25 @@ body:has(.admin-shell),
 }
 
 .admin-module-rail {
+  position: relative;
+  z-index: 4;
   display: flex;
   flex: 0 0 56px;
   flex-direction: column;
   width: 56px;
+  height: 100%;
   min-width: 0;
+  overflow: hidden;
   background: color-mix(in srgb, var(--admin-bg-layout) 74%, var(--admin-bg-container));
   border-inline-end: 1px solid var(--admin-border);
 }
 
 .admin-module-rail__brand {
-  display: grid;
+  display: flex;
   flex: 0 0 56px;
-  place-items: center;
+  align-items: center;
+  padding-inline: 8px;
+  overflow: hidden;
   color: var(--admin-primary);
   font-size: 14px;
   font-weight: 700;
@@ -61,12 +70,37 @@ body:has(.admin-shell),
   border-bottom: 1px solid var(--admin-border);
 }
 
+.admin-module-rail__brand-mark {
+  display: grid;
+  flex: 0 0 40px;
+  place-items: center;
+}
+
+.admin-module-rail__brand-label,
+.admin-module-rail__label {
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform: translateX(-4px);
+  transition:
+    opacity var(--admin-duration-short) var(--admin-ease-out),
+    transform var(--admin-duration-short) var(--admin-ease-out);
+}
+
+.admin-module-rail__brand-label {
+  color: var(--admin-text);
+  font-family: var(--admin-font-display);
+  font-size: 15px;
+}
+
 .admin-module-rail__modules {
   display: flex;
   min-height: 0;
   flex: 1;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   gap: 4px;
   padding: 8px;
   overflow-y: auto;
@@ -76,19 +110,33 @@ body:has(.admin-shell),
 
 .admin-module-rail__button {
   position: relative;
-  display: grid;
+  display: flex;
   flex: 0 0 40px;
-  width: 40px;
+  width: 100%;
   height: 40px;
   padding: 0;
-  place-items: center;
+  align-items: center;
   color: var(--admin-text-secondary);
   font: inherit;
-  font-size: 18px;
   background: transparent;
   border: 0;
   border-radius: var(--admin-radius);
   cursor: pointer;
+}
+
+.admin-module-rail__icon {
+  display: grid;
+  flex: 0 0 40px;
+  place-items: center;
+  font-size: 18px;
+}
+
+.admin-module-rail__label {
+  padding-inline-end: 12px;
+  color: currentColor;
+  font-size: 13px;
+  font-weight: 550;
+  letter-spacing: 0;
 }
 
 .admin-module-rail__button.is-active {
@@ -118,6 +166,27 @@ body:has(.admin-shell),
 .admin-module-rail__button:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+.admin-sidebar--compact .admin-module-rail {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+}
+
+.admin-sidebar--compact .admin-module-rail:has(.admin-module-rail__button:focus-visible) {
+  width: var(--admin-module-rail-expanded-width);
+  box-shadow: 12px 0 28px color-mix(in srgb, var(--admin-text) 14%, transparent);
+}
+
+.admin-sidebar--compact
+  .admin-module-rail:has(.admin-module-rail__button:focus-visible)
+  .admin-module-rail__brand-label,
+.admin-sidebar--compact
+  .admin-module-rail:has(.admin-module-rail__button:focus-visible)
+  .admin-module-rail__label {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .admin-navigation-panel {
@@ -481,6 +550,17 @@ body:has(.admin-shell),
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .admin-sidebar--compact .admin-module-rail:hover {
+    width: var(--admin-module-rail-expanded-width);
+    box-shadow: 12px 0 28px color-mix(in srgb, var(--admin-text) 14%, transparent);
+  }
+
+  .admin-sidebar--compact .admin-module-rail:hover .admin-module-rail__brand-label,
+  .admin-sidebar--compact .admin-module-rail:hover .admin-module-rail__label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
   .admin-module-rail__button:hover {
     color: var(--admin-primary);
     background: var(--admin-primary-bg);

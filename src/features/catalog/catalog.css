@@ -1,0 +1,29 @@
+.admin-catalog-page {
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.admin-catalog-page .ant-table-content,
+.admin-catalog-page .ant-table-body {
+  scrollbar-gutter: stable;
+}
+
+.admin-catalog-page__loading {
+  padding: 24px;
+}
+
+.admin-catalog-page__code,
+.admin-catalog-page__number {
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-catalog-page__empty {
+  min-height: 220px;
+  padding: 36px 16px;
+}
+
+@media (max-width: 40rem) {
+  .admin-catalog-page .ant-table-wrapper .ant-table-pagination {
+    margin-inline: 8px;
+  }
+}

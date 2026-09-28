@@ -1,54 +1,62 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  createMockAdminProduct,
-  listMockAdminProducts,
-  updateMockAdminProduct,
-  updateMockAdminProductStatus,
-} from '../../../mocks/adminProducts';
-import type { ProductStatus } from '../../../types/product';
-import type { AdminProductFilters, ProductFormValues } from '../adminProducts.model';
+import { mockAdminProductsRepository } from '../../../mocks/adminProducts';
+import type {
+  AdminProductFilters,
+  AdminProductStatus,
+  ProductFormValues,
+} from '../adminProducts.model';
+import type { ProductConversionFormValues } from '../products.repository';
 
-const adminProductsQueryKey = ['admin-products-mock'] as const;
+const repository = mockAdminProductsRepository;
+const adminProductsQueryKey = ['admin-products-v1'] as const;
 
 interface UseAdminProductsMockParams {
   filters: AdminProductFilters;
   page: number;
   pageSize: number;
+  selectedProductId?: number;
 }
 
-export function useAdminProductsMock({ filters, page, pageSize }: UseAdminProductsMockParams) {
+export function useAdminProductsMock({ filters, page, pageSize, selectedProductId }: UseAdminProductsMockParams) {
   const queryClient = useQueryClient();
   const listQuery = useQuery({
-    queryKey: [...adminProductsQueryKey, filters, page, pageSize],
-    queryFn: () => listMockAdminProducts(filters, page, pageSize),
+    queryKey: [...adminProductsQueryKey, 'list', filters, page, pageSize],
+    queryFn: () => repository.list(filters, page, pageSize),
     placeholderData: keepPreviousData,
   });
-
-  const invalidateList = () => queryClient.invalidateQueries({ queryKey: adminProductsQueryKey });
-
-  const createMutation = useMutation({
-    mutationFn: (values: ProductFormValues) => createMockAdminProduct(values),
-    onSuccess: invalidateList,
+  const referencesQuery = useQuery({
+    queryKey: [...adminProductsQueryKey, 'references'],
+    queryFn: () => repository.listReferences(),
+  });
+  const conversionsQuery = useQuery({
+    queryKey: [...adminProductsQueryKey, 'conversions', selectedProductId],
+    queryFn: () => repository.listConversions(selectedProductId as number),
+    enabled: selectedProductId !== undefined,
   });
 
-  const updateMutation = useMutation({
-    mutationFn: ({ id, values }: { id: number; values: ProductFormValues }) =>
-      updateMockAdminProduct(id, values),
-    onSuccess: invalidateList,
-  });
-
-  const statusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: number; status: Exclude<ProductStatus, 'OUT_OF_STOCK'> }) =>
-      updateMockAdminProductStatus(id, status),
-    onSuccess: invalidateList,
-  });
+  const invalidateProducts = () => queryClient.invalidateQueries({ queryKey: adminProductsQueryKey });
+  const createMutation = useMutation({ mutationFn: (values: ProductFormValues) => repository.create(values), onSuccess: invalidateProducts });
+  const updateMutation = useMutation({ mutationFn: ({ id, values }: { id: number; values: ProductFormValues }) => repository.update(id, values), onSuccess: invalidateProducts });
+  const activeMutation = useMutation({ mutationFn: ({ id, isActive }: { id: number; isActive: boolean }) => repository.updateActive(id, isActive), onSuccess: invalidateProducts });
+  const statusMutation = useMutation({ mutationFn: ({ id, status }: { id: number; status: AdminProductStatus }) => repository.updateStatus(id, status), onSuccess: invalidateProducts });
+  const createConversionMutation = useMutation({ mutationFn: ({ productId, values }: { productId: number; values: ProductConversionFormValues }) => repository.createConversion(productId, values), onSuccess: invalidateProducts });
+  const updateConversionMutation = useMutation({ mutationFn: ({ id, factor }: { id: number; factor: number }) => repository.updateConversion(id, factor), onSuccess: invalidateProducts });
+  const deleteConversionMutation = useMutation({ mutationFn: (id: number) => repository.deleteConversion(id), onSuccess: invalidateProducts });
 
   return {
     listQuery,
+    referencesQuery,
+    conversionsQuery,
     createProduct: createMutation.mutateAsync,
     updateProduct: updateMutation.mutateAsync,
+    updateActive: activeMutation.mutateAsync,
     updateStatus: statusMutation.mutateAsync,
+    createConversion: createConversionMutation.mutateAsync,
+    updateConversion: updateConversionMutation.mutateAsync,
+    deleteConversion: deleteConversionMutation.mutateAsync,
     isSavingProduct: createMutation.isPending || updateMutation.isPending,
-    isUpdatingStatus: statusMutation.isPending,
+    isUpdatingStatus: activeMutation.isPending || statusMutation.isPending,
+    isSavingConversion: createConversionMutation.isPending || updateConversionMutation.isPending,
+    isDeletingConversion: deleteConversionMutation.isPending,
   };
 }

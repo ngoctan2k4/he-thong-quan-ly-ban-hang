@@ -2,10 +2,12 @@
  * pre-emit critique: P5 H5 E5 S5 R5 V4
  */
 import {
+  AccountBookOutlined,
   AppstoreOutlined,
   AuditOutlined,
   BarChartOutlined,
   DatabaseOutlined,
+  FileExcelOutlined,
   RobotOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
@@ -16,17 +18,32 @@ import type { CSSProperties, ReactNode } from 'react';
 
 export type AdminRouteScreen =
   | 'dashboard'
+  | 'customers'
+  | 'suppliers'
   | 'products'
+  | 'product-categories'
+  | 'price-lists'
   | 'materials'
   | 'material-create'
   | 'material-groups'
   | 'units'
   | 'unit-conversions'
+  | 'branches'
+  | 'warehouses'
+  | 'sales-orders'
   | 'sales-payments'
   | 'sales-receivables'
   | 'supplier-payables'
   | 'supplier-payments'
+  | 'purchase-orders'
+  | 'purchase-order-form'
+  | 'goods-receipts'
+  | 'goods-receipt-form'
+  | 'system-users'
+  | 'system-roles'
   | 'placeholder';
+
+export type AdminRouteAction = 'export-sales-report';
 
 interface AdminNavigationBase {
   key: string;
@@ -39,6 +56,8 @@ export interface AdminNavigationRoute extends AdminNavigationBase {
   screen: AdminRouteScreen;
   hiddenInMenu?: boolean;
   parentKey?: string;
+  emphasizedInMenu?: boolean;
+  action?: AdminRouteAction;
   children?: never;
 }
 
@@ -57,6 +76,7 @@ export interface AdminRouteDefinition {
   screen: AdminRouteScreen;
   hiddenInMenu?: boolean;
   parentKey?: string;
+  action?: AdminRouteAction;
 }
 
 export interface AdminNavigationState {
@@ -77,7 +97,10 @@ const route = (
   label: string,
   screen: AdminRouteScreen = 'placeholder',
   icon?: ReactNode,
-  options?: Pick<AdminNavigationRoute, 'hiddenInMenu' | 'parentKey'>,
+  options?: Pick<
+    AdminNavigationRoute,
+    'hiddenInMenu' | 'parentKey' | 'emphasizedInMenu' | 'action'
+  >,
 ): AdminNavigationRoute => ({
   key: path,
   path,
@@ -117,15 +140,20 @@ export const adminNavigation: AdminNavigationNode[] = [
       ]),
       group('admin.catalog.products', 'Sản phẩm', [
         route('/admin/products', 'Danh sách sản phẩm', 'products'),
-        route('/admin/categories', 'Danh mục sản phẩm'),
+        route('/admin/categories', 'Nhóm hàng', 'product-categories'),
       ]),
-      group('admin.catalog.partners', 'Đối tác', [
-        route('/admin/customers', 'Khách hàng'),
-        route('/admin/suppliers', 'Nhà cung cấp'),
-      ]),
+      route('/admin/price-lists', 'Bảng giá', 'price-lists', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/customers', 'Khách hàng', 'customers', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/suppliers', 'Nhà cung cấp', 'suppliers', undefined, {
+        emphasizedInMenu: true,
+      }),
       group('admin.catalog.warehouses', 'Hệ thống kho', [
-        route('/admin/branches', 'Chi nhánh'),
-        route('/admin/warehouses', 'Kho'),
+        route('/admin/branches', 'Chi nhánh', 'branches'),
+        route('/admin/warehouses', 'Kho', 'warehouses'),
       ]),
     ],
     <AppstoreOutlined />,
@@ -134,13 +162,21 @@ export const adminNavigation: AdminNavigationNode[] = [
     'admin.sales',
     'Bán hàng',
     [
-      group('admin.sales.orders', 'Đơn bán', [
-        route('/admin/sales/orders', 'Đơn đặt hàng'),
-        route('/admin/sales/retail-orders', 'Đơn đặt hàng lẻ'),
-        route('/admin/sales/website', 'Đơn Website'),
-        route('/admin/sales/pos', 'Đơn POS'),
-        route('/admin/sales/wholesale', 'Đơn Wholesale'),
-      ]),
+      route('/admin/sales/orders', 'Đơn đặt hàng', 'sales-orders', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/sales/retail-orders', 'Đơn đặt hàng lẻ', 'placeholder', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/sales/website', 'Đơn Website', 'sales-orders', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/sales/pos', 'Đơn POS', 'sales-orders', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/sales/wholesale', 'Đơn Wholesale', 'sales-orders', undefined, {
+        emphasizedInMenu: true,
+      }),
       group('admin.sales.stock', 'Xuất hàng', [
         route('/admin/sales/stock-issues', 'Phiếu xuất kho'),
         route('/admin/sales/stock-history', 'Lịch sử xuất hàng'),
@@ -153,12 +189,16 @@ export const adminNavigation: AdminNavigationNode[] = [
         route('/admin/sales/returns', 'Danh sách trả hàng'),
         route('/admin/sales/returns/new', 'Tạo phiếu trả hàng'),
       ]),
-      group('admin.sales.reports', 'Báo cáo', [
-        route(
-          '/admin/sales/reports/revenue-volume',
-          'Báo cáo doanh số sản lượng',
-        ),
-      ]),
+      route(
+        '/admin/sales/reports/export',
+        'Xuất báo cáo Excel',
+        'placeholder',
+        <FileExcelOutlined />,
+        {
+          emphasizedInMenu: true,
+          action: 'export-sales-report',
+        },
+      ),
     ],
     <ShoppingCartOutlined />,
   ),
@@ -166,16 +206,48 @@ export const adminNavigation: AdminNavigationNode[] = [
     'admin.purchase',
     'Mua hàng',
     [
-      route('/admin/purchase/orders', 'Đơn mua hàng'),
-      route('/admin/purchase/retail-orders', 'Đơn mua hàng lẻ'),
-      route('/admin/purchase/orders/new', 'Tạo đơn mua hàng', 'placeholder', undefined, {
+      route('/admin/purchase/orders', 'Đơn mua hàng', 'purchase-orders', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route(
+        '/admin/purchase/retail-orders',
+        'Đơn mua hàng lẻ',
+        'placeholder',
+        undefined,
+        { emphasizedInMenu: true },
+      ),
+      route('/admin/purchase/orders/new', 'Tạo đơn mua hàng', 'purchase-order-form', undefined, {
         hiddenInMenu: true,
         parentKey: '/admin/purchase/orders',
       }),
-      group('admin.purchase.receipts', 'Nhận hàng', [
-        route('/admin/purchase/goods-receipts', 'Phiếu nhập kho'),
-        route('/admin/purchase/receipts', 'Theo dõi nhận hàng'),
-      ]),
+      route('/admin/purchase/orders/:id/edit', 'Sửa đơn mua hàng', 'purchase-order-form', undefined, {
+        hiddenInMenu: true,
+        parentKey: '/admin/purchase/orders',
+      }),
+      route(
+        '/admin/purchase/goods-receipts',
+        'Phiếu nhập kho',
+        'goods-receipts',
+        undefined,
+        { emphasizedInMenu: true },
+      ),
+      route(
+        '/admin/purchase/goods-receipts/new',
+        'Tạo phiếu nhận hàng',
+        'goods-receipt-form',
+        undefined,
+        {
+          hiddenInMenu: true,
+          parentKey: '/admin/purchase/goods-receipts',
+        },
+      ),
+      route(
+        '/admin/purchase/receipts',
+        'Theo dõi nhận hàng',
+        'placeholder',
+        undefined,
+        { emphasizedInMenu: true },
+      ),
       group('admin.purchase.payables', 'Công nợ nhà cung cấp', [
         route('/admin/purchase/payables', 'Danh sách công nợ', 'supplier-payables'),
         route('/admin/purchase/payments', 'Lịch sử thanh toán', 'supplier-payments'),
@@ -191,37 +263,74 @@ export const adminNavigation: AdminNavigationNode[] = [
     'admin.inventory',
     'Kho',
     [
-      group('admin.inventory.stock', 'Tồn kho', [
-        route('/admin/inventory', 'Tổng quan tồn kho'),
-        route('/admin/inventory/products', 'Tồn theo sản phẩm'),
-        route('/admin/inventory/warehouses', 'Tồn theo kho'),
-        route('/admin/inventory/branches', 'Tồn theo chi nhánh'),
-      ]),
-      group('admin.inventory.transactions', 'Giao dịch kho', [
-        route('/admin/inventory/transactions', 'Lịch sử biến động'),
-        route('/admin/inventory/inbound', 'Nhập kho'),
-        route('/admin/inventory/outbound', 'Xuất kho'),
-        route('/admin/inventory/adjustments', 'Điều chỉnh tồn'),
-      ]),
-      group('admin.inventory.transfers', 'Chuyển kho', [
-        route('/admin/inventory/transfers', 'Danh sách phiếu chuyển'),
-        route('/admin/inventory/transfers/new', 'Tạo phiếu chuyển'),
-      ]),
-      group('admin.inventory.stocktakes', 'Kiểm kê', [
-        route('/admin/inventory/stocktakes', 'Danh sách kiểm kê'),
-        route('/admin/inventory/stocktakes/new', 'Tạo đợt kiểm kê'),
-      ]),
-      group('admin.inventory.write-offs', 'Xuất hủy / Xuất khác', [
-        route('/admin/inventory/write-offs', 'Danh sách phiếu'),
-        route('/admin/inventory/write-offs/new', 'Tạo phiếu'),
-      ]),
-      group('admin.inventory.alerts', 'Cảnh báo tồn kho', [
-        route('/admin/inventory/low-stock', 'Sắp hết hàng'),
-        route('/admin/inventory/out-of-stock', 'Hết hàng'),
-        route('/admin/inventory/anomalies', 'Bất thường tồn kho'),
-      ]),
+      route('/admin/inventory/inbound', 'Nhập kho', 'placeholder', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/inventory/outbound', 'Xuất kho', 'placeholder', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route(
+        '/admin/inventory/movement-summary',
+        'Nhập xuất tồn kho',
+        'placeholder',
+        undefined,
+        { emphasizedInMenu: true },
+      ),
+      route('/admin/inventory/balance', 'Cân bằng kho', 'placeholder', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/inventory/transfers', 'Chuyển kho', 'placeholder', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/inventory/packing', 'Đóng thùng', 'placeholder', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/inventory/dispatch', 'Điều phối', 'placeholder', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/inventory/stocktakes', 'Kiểm kê', 'placeholder', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/inventory/layout', 'Layout kho', 'placeholder', undefined, {
+        emphasizedInMenu: true,
+      }),
+      route('/admin/inventory/lookup', 'Tra cứu tồn kho', 'placeholder', undefined, {
+        emphasizedInMenu: true,
+      }),
     ],
     <DatabaseOutlined />,
+  ),
+  group(
+    'admin.accounting',
+    'Kế toán',
+    [
+      group('admin.accounting.purchase', 'Mua hàng', [
+        route(
+          '/admin/accounting/purchase/goods-vouchers',
+          'Chứng từ mua hàng hóa',
+        ),
+        route(
+          '/admin/accounting/purchase/service-vouchers',
+          'Chứng từ mua dịch vụ',
+        ),
+        route(
+          '/admin/accounting/purchase/returns',
+          'Trả lại hàng mua',
+        ),
+      ]),
+      group('admin.accounting.sales', 'Bán hàng', [
+        route(
+          '/admin/accounting/sales/vouchers',
+          'Chứng từ bán hàng',
+        ),
+        route('/admin/accounting/sales/invoices', 'Hóa đơn'),
+        route(
+          '/admin/accounting/sales/ecommerce-vouchers',
+          'Chứng từ hàng hóa Ecom',
+        ),
+      ]),
+    ],
+    <AccountBookOutlined />,
   ),
   group(
     'admin.ai',
@@ -256,15 +365,13 @@ export const adminNavigation: AdminNavigationNode[] = [
   ),
   group(
     'admin.system',
-    'Quản trị hệ thống',
+    'Hệ thống',
     [
       group('admin.system.users', 'Người dùng', [
-        route('/admin/users', 'Danh sách người dùng'),
-        route('/admin/users/status', 'Trạng thái tài khoản'),
+        route('/admin/users', 'Danh sách người dùng', 'system-users'),
       ]),
       group('admin.system.permissions', 'Vai trò & Phân quyền', [
-        route('/admin/roles', 'Vai trò'),
-        route('/admin/permissions', 'Phân quyền'),
+        route('/admin/roles', 'Vai trò', 'system-roles'),
       ]),
       group('admin.system.logs', 'Nhật ký hệ thống', [
         route('/admin/audit-logs', 'Audit Log'),
@@ -290,6 +397,7 @@ function collectAdminRoutes(nodes: AdminNavigationNode[]): AdminRouteDefinition[
           screen: node.screen,
           hiddenInMenu: node.hiddenInMenu,
           parentKey: node.parentKey,
+          action: node.action,
         },
       ];
     }
@@ -311,12 +419,21 @@ function normalizePath(pathname: string): string {
   return normalized.length > 0 ? normalized : '/';
 }
 
+function matchesNavigationPath(routePath: string, pathname: string): boolean {
+  const routeSegments = normalizePath(routePath).split('/');
+  const pathnameSegments = normalizePath(pathname).split('/');
+  if (routeSegments.length !== pathnameSegments.length) return false;
+  return routeSegments.every((segment, index) => (
+    segment.startsWith(':') ? pathnameSegments[index].length > 0 : segment === pathnameSegments[index]
+  ));
+}
+
 function findNavigationTrail(
   nodes: AdminNavigationNode[],
   pathname: string,
 ): AdminNavigationNode[] | undefined {
   for (const node of nodes) {
-    if (isAdminRoute(node) && normalizePath(node.path) === pathname) {
+    if (isAdminRoute(node) && matchesNavigationPath(node.path, pathname)) {
       return [node];
     }
 
@@ -403,6 +520,7 @@ function toMenuItem(node: AdminNavigationNode): AdminMenuItem {
       icon: node.icon,
       label: renderMenuLabel(node.label),
       title: node.label,
+      style: node.emphasizedInMenu ? { fontWeight: 600 } : undefined,
     };
   }
 

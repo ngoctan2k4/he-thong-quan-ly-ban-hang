@@ -1,0 +1,24 @@
+.admin-pricing-page {
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.admin-pricing__loading {
+  padding: 24px;
+}
+
+.admin-pricing__empty {
+  min-height: 220px;
+  padding: 36px 16px;
+}
+
+.admin-pricing__table .ant-table-content,
+.admin-pricing__tier-table .ant-table-content {
+  scrollbar-gutter: stable;
+}
+
+@media (max-width: 40rem) {
+  .admin-pricing-page .ant-table-wrapper .ant-table-pagination {
+    margin-inline: 8px;
+  }
+}

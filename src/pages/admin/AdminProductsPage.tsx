@@ -17,12 +17,10 @@ import { ProductFilters } from '../../features/products/components/ProductFilter
 import { ProductFormDrawer } from '../../features/products/components/ProductFormDrawer';
 import { ProductTable } from '../../features/products/components/ProductTable';
 import { useAdminProductsMock } from '../../features/products/hooks/useAdminProductsMock';
-import { mockProductCategories } from '../../mocks/adminProducts';
-import type { ProductStatus } from '../../types/product';
+import type { ProductConversionFormValues } from '../../features/products/products.repository';
 
 interface PendingStatusChange {
   product: AdminProductRecord;
-  status: Exclude<ProductStatus, 'OUT_OF_STOCK'>;
 }
 
 export function AdminProductsPage() {
@@ -38,12 +36,19 @@ export function AdminProductsPage() {
 
   const {
     listQuery,
+    referencesQuery,
+    conversionsQuery,
     createProduct,
     updateProduct,
-    updateStatus,
+    updateActive,
+    createConversion,
+    updateConversion,
+    deleteConversion,
     isSavingProduct,
     isUpdatingStatus,
-  } = useAdminProductsMock({ filters, page, pageSize });
+    isSavingConversion,
+    isDeletingConversion,
+  } = useAdminProductsMock({ filters, page, pageSize, selectedProductId: selectedProduct?.id });
 
   const handleFilterChange = useCallback((nextFilters: AdminProductFilters) => {
     setFilters(nextFilters);
@@ -77,9 +82,11 @@ export function AdminProductsPage() {
     try {
       if (formMode === 'edit' && selectedProduct) {
         await updateProduct({ id: selectedProduct.id, values });
+        void message.success('Đã cập nhật sản phẩm.');
       } else {
         await createProduct(values);
         setPage(1);
+        void message.success('Đã thêm sản phẩm.');
       }
       setFormOpen(false);
       setSelectedProduct(undefined);
@@ -90,7 +97,8 @@ export function AdminProductsPage() {
 
   const performStatusChange = async (change: PendingStatusChange) => {
     try {
-      await updateStatus({ id: change.product.id, status: change.status });
+      await updateActive({ id: change.product.id, isActive: !change.product.isActive });
+      void message.success(change.product.isActive ? 'Đã tắt sản phẩm.' : 'Đã kích hoạt sản phẩm.');
       setPendingStatusChange(undefined);
     } catch (error) {
       void message.error(
@@ -99,21 +107,38 @@ export function AdminProductsPage() {
     }
   };
 
-  const handleStatusChangeRequest = (
-    product: AdminProductRecord,
-    status: Exclude<ProductStatus, 'OUT_OF_STOCK'>,
-  ) => {
-    const change = { product, status };
-    if (status === 'INACTIVE') {
-      setPendingStatusChange(change);
-      return;
+  const handleStatusChangeRequest = (product: AdminProductRecord) => {
+    setPendingStatusChange({ product });
+  };
+
+  const handleSaveConversion = async (values: ProductConversionFormValues, conversionId?: number) => {
+    if (!selectedProduct) return false;
+    try {
+      if (conversionId === undefined) await createConversion({ productId: selectedProduct.id, values });
+      else await updateConversion({ id: conversionId, factor: values.factor });
+      void message.success(conversionId === undefined ? 'Đã thêm quy đổi.' : 'Đã cập nhật quy đổi.');
+      return true;
+    } catch (error) {
+      void message.error(error instanceof Error ? error.message : 'Không thể lưu quy đổi.');
+      return false;
     }
-    void performStatusChange(change);
+  };
+
+  const handleDeleteConversion = async (id: number) => {
+    try {
+      await deleteConversion(id);
+      void message.success('Đã xóa quy đổi.');
+      return true;
+    } catch (error) {
+      void message.error(error instanceof Error ? error.message : 'Không thể xóa quy đổi.');
+      return false;
+    }
   };
 
   const listResult = listQuery.data;
   const products = listResult?.content ?? [];
   const total = listResult?.totalElements ?? 0;
+  const references = referencesQuery.data ?? { categories: [], units: [], brands: [] };
 
   return (
     <div className="admin-products-page">
@@ -128,7 +153,8 @@ export function AdminProductsPage() {
         toolbar={
           <ProductFilters
             filters={filters}
-            categories={mockProductCategories}
+            categories={references.categories}
+            brands={references.brands}
             loading={listQuery.isFetching}
             onChange={handleFilterChange}
             onReset={handleFilterReset}
@@ -173,7 +199,7 @@ export function AdminProductsPage() {
             onCreate={openCreateDrawer}
             onView={openDetailDrawer}
             onEdit={openEditDrawer}
-            onRequestStatusChange={handleStatusChangeRequest}
+            onRequestActiveChange={handleStatusChangeRequest}
           />
         ) : null}
       </AdminListPage>
@@ -181,15 +207,23 @@ export function AdminProductsPage() {
       <ProductDetailDrawer
         open={detailOpen}
         product={selectedProduct}
+        references={references}
+        conversions={conversionsQuery.data ?? []}
+        conversionsLoading={conversionsQuery.isLoading}
+        conversionSaving={isSavingConversion}
+        conversionDeleting={isDeletingConversion}
         onClose={() => setDetailOpen(false)}
         onEdit={openEditDrawer}
+        onSaveConversion={handleSaveConversion}
+        onDeleteConversion={handleDeleteConversion}
       />
 
       <ProductFormDrawer
         open={formOpen}
         mode={formMode}
         product={selectedProduct}
-        categories={mockProductCategories}
+        references={references}
+        hasConversions={Boolean(selectedProduct && (conversionsQuery.isLoading || conversionsQuery.data?.length))}
         loading={isSavingProduct}
         onClose={() => {
           setFormOpen(false);
@@ -200,14 +234,14 @@ export function AdminProductsPage() {
 
       <ConfirmModal
         open={Boolean(pendingStatusChange)}
-        title="Ngừng bán sản phẩm?"
+        title={pendingStatusChange?.product.isActive ? 'Tắt sản phẩm?' : 'Kích hoạt sản phẩm?'}
         content={
           pendingStatusChange
-            ? `“${pendingStatusChange.product.name}” sẽ không còn ở trạng thái đang bán trên màn hình quản trị.`
+            ? `Xác nhận ${pendingStatusChange.product.isActive ? 'tắt' : 'kích hoạt'} “${pendingStatusChange.product.name}”.`
             : ''
         }
-        confirmText="Ngừng bán"
-        danger
+        confirmText={pendingStatusChange?.product.isActive ? 'Tắt sản phẩm' : 'Kích hoạt'}
+        danger={pendingStatusChange?.product.isActive}
         loading={isUpdatingStatus}
         onConfirm={() => {
           if (pendingStatusChange) {

@@ -1,0 +1,89 @@
+/* Hallmark · macrostructure: Relationship ledger · genre: modern-minimal · theme: existing Ant Design
+ * tone: utilitarian enterprise · anchor hue: cobalt blue · enrichment: none · nav: existing N3 · footer: none
+ * pre-emit critique: P5 H5 E5 S5 R5 V4
+ * contrast: pass (40–41) · slop: pass (42–49) · mobile: pass (34, 49, 50–57)
+ */
+
+.admin-customers-page {
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.admin-customers__code,
+.admin-customers__table .ant-table-cell,
+.admin-customers__summary {
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-customers__code,
+.admin-customers__row-actions .ant-btn,
+.admin-customers__row-actions .ant-dropdown-trigger,
+.admin-customers__address-actions .ant-btn {
+  white-space: nowrap;
+}
+
+.admin-customers__table .ant-table-content,
+.admin-customers__table .ant-table-body {
+  scrollbar-gutter: stable;
+}
+
+.admin-customers__table .ant-table-thead > tr > th,
+.admin-customers__table .ant-table-tbody > tr > td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-customers__empty,
+.admin-entity__loading {
+  min-height: 260px;
+  padding: 40px 24px;
+}
+
+.admin-customers__summary {
+  min-height: 24px;
+}
+
+.admin-customers__address-item.ant-list-item {
+  padding: 14px 0;
+}
+
+.admin-customers__address-copy {
+  width: 100%;
+  min-width: 0;
+}
+
+.admin-customers__address-copy .ant-typography {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 40rem) {
+  .admin-customers__row-actions .ant-btn:not(.ant-dropdown-trigger) span:not(.anticon),
+  .admin-customers__address-actions .ant-btn span:not(.anticon) {
+    display: none;
+  }
+
+  .admin-customers__empty,
+  .admin-entity__loading {
+    min-height: 220px;
+    padding: 28px 16px;
+  }
+}
+
+@media (pointer: coarse) {
+  .admin-customers__row-actions .ant-btn,
+  .admin-customers__address-actions .ant-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-customers-page *,
+  .admin-customers-page *::before,
+  .admin-customers-page *::after {
+    animation-duration: 150ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+}
