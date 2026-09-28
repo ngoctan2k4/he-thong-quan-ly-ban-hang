@@ -1,32 +1,59 @@
-/* Hallmark · macrostructure: Split authentication · tone: calm operational confidence · anchor hue: navy */
-import { ArrowLeftOutlined, CheckCircleFilled, ShopOutlined } from '@ant-design/icons';
-import { Button, Col, Layout, Row, Space, Typography } from 'antd';
+import { Layout, Row, Col, Typography, Space, Button } from 'antd';
 import { Link, Outlet } from 'react-router-dom';
-import '../styles/customer.css';
+import { CheckCircleFilled, ArrowLeftOutlined } from '@ant-design/icons';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 
 export function AuthLayout() {
   return (
-    <Layout className="customer-shell auth-shell">
-      <Link className="auth-back-link" to="/"><Button type="text" icon={<ArrowLeftOutlined />}>Về cửa hàng</Button></Link>
-      <Row className="auth-layout-row">
-        <Col xs={0} md={11} lg={13} className="auth-story-panel">
-          <div className="auth-story-panel__content">
-            <Link to="/" className="auth-brand"><span><ShopOutlined /></span> SalesHub</Link>
-            <Text className="auth-story-panel__eyebrow">Một tài khoản, mọi kênh bán</Text>
-            <Title level={1}>Mua hàng rõ giá. Theo dõi rõ trạng thái.</Title>
-            <Paragraph>Đăng nhập để dùng đúng chính sách khách lẻ, VIP hoặc đối tác mua sỉ mà không thay đổi luồng mua hàng hiện tại.</Paragraph>
-            <Space direction="vertical" size={16} className="auth-benefit-list">
-              <span><CheckCircleFilled /> Giá và MOQ theo hồ sơ khách hàng</span>
-              <span><CheckCircleFilled /> Giỏ hàng dùng chung trong phiên mua sắm</span>
-              <span><CheckCircleFilled /> Theo dõi đơn từ xác nhận đến hoàn tất</span>
+    <Layout style={{ minHeight: '100vh', background: '#fff' }}>
+      <Link to="/" style={{ position: 'absolute', top: 24, right: 32, zIndex: 10 }}>
+        <Button type="text" icon={<ArrowLeftOutlined />} style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>
+          Quay lại trang chủ
+        </Button>
+      </Link>
+      <Row style={{ minHeight: '100vh' }}>
+        <Col xs={0} md={11} lg={13} style={{
+          background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '60px 80px',
+          color: '#fff',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{ position: 'absolute', top: -100, right: -100, width: 400, height: 400, background: 'rgba(59,130,246,0.2)', borderRadius: '50%', filter: 'blur(80px)' }} />
+          <div style={{ position: 'absolute', bottom: -50, left: -50, width: 300, height: 300, background: 'rgba(16,185,129,0.2)', borderRadius: '50%', filter: 'blur(60px)' }} />
+
+          <Space direction="vertical" size={24} style={{ position: 'relative', zIndex: 1, maxWidth: 500 }}>
+            <Link to="/" style={{ fontSize: 32, fontWeight: 900, letterSpacing: '-1px', color: '#fff' }}>TechHub</Link>
+            <Title level={1} style={{ color: '#fff', margin: 0, fontSize: 44, lineHeight: 1.15 }}>
+              Nền tảng quản lý<br />bán lẻ toàn diện
+            </Title>
+            <Paragraph style={{ color: 'rgba(255,255,255,0.85)', fontSize: 18, lineHeight: 1.6, margin: 0 }}>
+              Quản lý bán hàng đa kênh, tối ưu kho bãi, và tự động hoá quy trình kinh doanh của bạn trên một hệ thống duy nhất.
+            </Paragraph>
+            <Space direction="vertical" size={18} style={{ marginTop: 24 }}>
+              {[
+                'Quản lý kho bãi và công nợ đối tác',
+                'Tích hợp đa kênh bán hàng online & offline',
+                'Hệ thống POS bán hàng trực tiếp tại quầy',
+                'Báo cáo doanh thu & lợi nhuận thời gian thực'
+              ].map((item, i) => (
+                <Space key={i} align="center">
+                  <CheckCircleFilled style={{ color: '#10b981', fontSize: 20 }} />
+                  <span style={{ fontSize: 16, color: '#f8fafc', fontWeight: 500 }}>{item}</span>
+                </Space>
+              ))}
             </Space>
-          </div>
-          <div className="auth-story-panel__foot">Customer Website 7.1 · SalesHub</div>
+          </Space>
         </Col>
-        <Col xs={24} md={13} lg={11} className="auth-form-panel">
-          <div className="auth-form-panel__inner"><Outlet /></div>
+
+        <Col xs={24} md={13} lg={11} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '40px 24px' }}>
+          <div style={{ width: '100%', maxWidth: 440 }}>
+            <Outlet />
+          </div>
         </Col>
       </Row>
     </Layout>
