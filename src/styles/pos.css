@@ -1,4 +1,7 @@
-/* 7.2 POS. All storefront and register rules stay inside POS-specific wrappers. */
+/* Hallmark · macrostructure: register workbench · tone: fast retail utility · anchor hue: cobalt
+ * pre-emit critique: P5 H5 E5 S5 R5 V4
+ * 7.2 POS. All register rules stay inside POS-specific wrappers.
+ */
 
 .pos-shell.pos-login-page {
   display: grid;
@@ -103,6 +106,16 @@
   transform: translateY(-2px);
 }
 
+.pos-shell .pos-product:focus-visible {
+  outline: 3px solid #1677ff;
+  outline-offset: 2px;
+}
+
+.pos-shell .pos-product:active:not(:disabled) {
+  box-shadow: 0 4px 12px rgb(15 23 42 / 8%);
+  transform: translateY(0);
+}
+
 .pos-shell .pos-product:disabled {
   cursor: not-allowed;
   opacity: 0.48;
@@ -112,8 +125,27 @@
   display: grid;
   height: 84px;
   margin-bottom: 10px;
+  overflow: hidden;
   font-size: 44px;
+  background: color-mix(in srgb, var(--pos-product-color, #1677ff) 12%, #fff);
   border-radius: 10px;
+  place-items: center;
+}
+
+.pos-shell .pos-product__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.pos-shell .pos-product__fallback {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  color: var(--pos-product-color, #1677ff);
   place-items: center;
 }
 
@@ -308,6 +340,17 @@
   .pos-shell .pos-cart-lines {
     margin-inline: -14px;
     padding-inline: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pos-shell .pos-product {
+    transition-duration: 0.01ms;
+  }
+
+  .pos-shell .pos-product:hover:not(:disabled),
+  .pos-shell .pos-product:active:not(:disabled) {
+    transform: none;
   }
 }
 

@@ -39,7 +39,7 @@ import {
   Typography,
   type InputRef,
 } from 'antd';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState, type CSSProperties } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PageHeader } from '../../components/common/PageHeader';
 import { StatusTag } from '../../components/common/StatusTag';
@@ -105,9 +105,29 @@ export function PosOverviewPage() {
 }
 
 function PosProductButton({ product, onAdd }: { product: CatalogProduct; onAdd: () => void }) {
+  const imageUrl = product.imageUrl?.trim();
+  const [failedImageUrl, setFailedImageUrl] = useState<string>();
+  const showImage = Boolean(imageUrl && imageUrl !== failedImageUrl);
+
   return (
     <button className="pos-product" type="button" onClick={onAdd} disabled={product.availableStock <= 0}>
-      <span className="pos-product__icon" style={{ background: product.color }}>{product.icon}</span>
+      <span
+        className="pos-product__icon"
+        style={{ '--pos-product-color': product.color } as CSSProperties}
+      >
+        {imageUrl && showImage ? (
+          <img
+            className="pos-product__image"
+            src={imageUrl}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            onError={() => setFailedImageUrl(imageUrl)}
+          />
+        ) : (
+          <span className="pos-product__fallback" aria-hidden="true">{product.icon}</span>
+        )}
+      </span>
       <span className="pos-product__name">{product.name}</span>
       <strong>{formatCurrency(product.retailPrice)}</strong>
       <small>{product.availableStock > 0 ? `Tồn ${product.availableStock}` : 'Hết hàng'}</small>
