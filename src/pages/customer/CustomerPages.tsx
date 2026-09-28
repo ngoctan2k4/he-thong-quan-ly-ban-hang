@@ -1,16 +1,23 @@
 import {
   ArrowRightOutlined,
   BankOutlined,
+  CaretRightOutlined,
   CheckCircleFilled,
   ClockCircleOutlined,
   CreditCardOutlined,
+  CustomerServiceOutlined,
   DeleteOutlined,
   EnvironmentOutlined,
+  GiftOutlined,
+  HeartOutlined,
   MinusOutlined,
+  PlayCircleOutlined,
   PlusOutlined,
   SafetyCertificateOutlined,
+  SearchOutlined,
   ShoppingCartOutlined,
   ShopOutlined,
+  StarFilled,
   TruckOutlined,
 } from '@ant-design/icons';
 import {
@@ -19,6 +26,7 @@ import {
   Breadcrumb,
   Button,
   Card,
+  Carousel,
   Col,
   Descriptions,
   Divider,
@@ -30,12 +38,14 @@ import {
   List,
   Progress,
   Radio,
+  Rate,
   Row,
   Segmented,
   Select,
   Space,
   Steps,
   Tag,
+  Tabs,
   Typography,
 } from 'antd';
 import { useMemo, useState } from 'react';
@@ -44,15 +54,31 @@ import { PageHeader } from '../../components/common/PageHeader';
 import { StatusTag } from '../../components/common/StatusTag';
 import { useCommerce, type CartLine } from '../../features/commerce/CommerceContext';
 import { formatCurrency, formatDate, getUnitPrice } from '../../features/commerce/pricing';
+import { getStorefrontBrands, getStorefrontProductView } from '../../features/commerce/storefront';
 import type { CatalogProduct } from '../../mocks/commerce';
 import { categories } from '../../mocks/commerce';
 
 const { Title, Text, Paragraph } = Typography;
 
-function ProductArtwork({ product, large = false }: { product: CatalogProduct; large?: boolean }) {
+type ArtworkView = 'front' | 'detail' | 'package';
+
+function ProductArtwork({
+  product,
+  large = false,
+  view = 'front',
+}: {
+  product: CatalogProduct;
+  large?: boolean;
+  view?: ArtworkView;
+}) {
   return (
-    <div className={`product-artwork${large ? ' product-artwork--large' : ''}`} style={{ '--product-color': product.color } as React.CSSProperties}>
-      <span>{product.icon}</span>
+    <div
+      className={`product-artwork product-artwork--${view}${large ? ' product-artwork--large' : ''}`}
+      style={{ '--product-color': product.color } as React.CSSProperties}
+      role="img"
+      aria-label={`${product.name} - ${view === 'front' ? 'mặt trước' : view === 'detail' ? 'chi tiết' : 'bao bì'}`}
+    >
+      <span aria-hidden="true">{product.icon}</span>
       <div className="product-artwork__label">{product.brand}</div>
     </div>
   );
@@ -74,6 +100,7 @@ function ProductCard({ product }: { product: CatalogProduct }) {
   const { message } = App.useApp();
   const { addToCart, activeCustomer } = useCommerce();
   const outOfStock = product.availableStock <= 0;
+  const storefront = getStorefrontProductView(product);
 
   const add = () => {
     const quantity = activeCustomer.type === 'WHOLESALE' ? product.moq ?? 1 : 1;
@@ -84,16 +111,25 @@ function ProductCard({ product }: { product: CatalogProduct }) {
 
   return (
     <Card className="product-card" styles={{ body: { padding: 18 } }}>
-      <Link to={`/products/${product.id}`}><ProductArtwork product={product} /></Link>
+      <Link className="product-card__artwork-link" to={`/products/${product.id}`}>
+        <ProductArtwork product={product} />
+        {storefront.flashSale ? <span className="product-card__flag">Giá tốt</span> : null}
+      </Link>
       <Flex vertical gap={8} className="product-card__body">
         <Flex justify="space-between" align="center">
           <Tag bordered={false}>{product.category}</Tag>
           <Text type={outOfStock ? 'danger' : 'secondary'}>{outOfStock ? 'Hết hàng' : `Còn ${product.availableStock}`}</Text>
         </Flex>
         <Link to={`/products/${product.id}`}><Title level={5} ellipsis={{ rows: 2 }} className="product-card__name">{product.name}</Title></Link>
+        <div className="product-card__rating" aria-label={storefront.rating ? `${storefront.rating} sao` : 'Chưa có đánh giá'}>
+          {storefront.rating ? <><StarFilled /> {storefront.rating} <span>({storefront.reviewCount})</span></> : <span>Sản phẩm mới</span>}
+        </div>
         <ProductPrice product={product} quantity={activeCustomer.type === 'WHOLESALE' ? product.moq : 1} />
         {activeCustomer.type === 'WHOLESALE' ? <Text type="secondary" className="product-card__moq">MOQ: {product.moq} {product.unit.toLowerCase()}</Text> : null}
-        <Button type="primary" icon={<ShoppingCartOutlined />} disabled={outOfStock} onClick={add} block>Thêm vào giỏ</Button>
+        <Flex gap={8} className="product-card__actions">
+          <Button aria-label="Lưu sản phẩm" icon={<HeartOutlined />} disabled={outOfStock} />
+          <Button type="primary" icon={<ShoppingCartOutlined />} disabled={outOfStock} onClick={add} block>Thêm vào giỏ</Button>
+        </Flex>
       </Flex>
     </Card>
   );
@@ -102,51 +138,107 @@ function ProductCard({ product }: { product: CatalogProduct }) {
 export function CustomerHomePage() {
   const { products, activeCustomer } = useCommerce();
   const featured = products.filter((product) => product.featured);
+  const [activeCategory, setActiveCategory] = useState(categories[1] ?? 'Tất cả');
+  const categoryProducts = products.filter((product) => product.category === activeCategory).slice(0, 4);
+  const flashProducts = products.filter((product) => getStorefrontProductView(product).flashSale).slice(0, 4);
+  const brands = getStorefrontBrands(products);
+  const slides = [
+    {
+      key: 'retail',
+      eyebrow: 'Mua lẻ thuận tiện',
+      title: 'Nhu yếu phẩm sẵn kho, giao theo nhịp sống của bạn.',
+      copy: 'Tìm đúng mặt hàng, xem tồn khả dụng và theo dõi đơn hàng trên một luồng mua sắm liền mạch.',
+      action: 'Khám phá sản phẩm',
+      href: '/products',
+      product: featured[0] ?? products[0],
+    },
+    {
+      key: 'wholesale',
+      eyebrow: 'Dành cho đối tác mua sỉ',
+      title: 'Giá theo số lượng, chính sách mua hàng rõ ràng.',
+      copy: 'MOQ, bậc giá và hạn mức công nợ được hiển thị theo đúng hồ sơ khách hàng đang sử dụng.',
+      action: activeCustomer.type === 'WHOLESALE' ? 'Xem tài khoản' : 'Tìm hiểu mua sỉ',
+      href: '/account',
+      product: featured[1] ?? products[1] ?? products[0],
+    },
+    {
+      key: 'orders',
+      eyebrow: 'Theo dõi đa kênh',
+      title: 'Từ giỏ hàng đến giao nhận, trạng thái luôn trong tầm mắt.',
+      copy: 'Đơn Website và đơn mua sỉ dùng chung dữ liệu sản phẩm, giá và tồn kho của SalesHub.',
+      action: 'Theo dõi đơn hàng',
+      href: '/orders',
+      product: featured[2] ?? products[2] ?? products[0],
+    },
+  ];
 
   return (
-    <Space direction="vertical" size={40} style={{ width: '100%' }}>
-      <section className="store-hero">
-        <Row gutter={[40, 40]} align="middle">
-          <Col xs={24} lg={13}>
-            <Tag color="blue" bordered={false}>MUA SẮM ĐA KÊNH · GIAO NHANH</Tag>
-            <Title className="store-hero__title">Mọi thứ bạn cần, <span>giá tốt mỗi ngày.</span></Title>
-            <Paragraph className="store-hero__copy">Mua lẻ thuận tiện, đặt sỉ minh bạch. Tồn kho được kiểm tra theo thời gian thực trước khi xác nhận đơn.</Paragraph>
-            <Space size={12} wrap>
-              <Link to="/products"><Button type="primary" size="large">Mua sắm ngay <ArrowRightOutlined /></Button></Link>
-              <Link to="/account"><Button size="large">{activeCustomer.type === 'WHOLESALE' ? 'Xem hạn mức công nợ' : 'Khám phá giá sỉ'}</Button></Link>
-            </Space>
-            <Flex gap={28} wrap className="hero-trust">
-              <Space><TruckOutlined /><Text>Giao nhanh 2 giờ</Text></Space>
-              <Space><SafetyCertificateOutlined /><Text>Hàng chính hãng</Text></Space>
-              <Space><CreditCardOutlined /><Text>Thanh toán linh hoạt</Text></Space>
-            </Flex>
-          </Col>
-          <Col xs={24} lg={11}>
-            <div className="hero-collage">
-              {featured.slice(0, 3).map((product, index) => (
-                <div className={`hero-product hero-product--${index + 1}`} key={product.id} style={{ '--product-color': product.color } as React.CSSProperties}>
-                  <span>{product.icon}</span><strong>{product.brand}</strong>
-                </div>
-              ))}
-              <div className="hero-offer"><strong>-15%</strong><span>đơn đầu tiên</span></div>
+    <Space direction="vertical" size={48} className="customer-home-stack">
+      <section className="store-hero" aria-label="Giới thiệu SalesHub">
+        <Carousel autoplay autoplaySpeed={6000} pauseOnHover dots={{ className: 'store-hero__dots' }}>
+          {slides.map((slide) => (
+            <div key={slide.key}>
+              <Row gutter={[32, 32]} align="middle" className="store-hero__slide">
+                <Col xs={24} lg={14}>
+                  <Text className="store-hero__eyebrow">{slide.eyebrow}</Text>
+                  <Title className="store-hero__title">{slide.title}</Title>
+                  <Paragraph className="store-hero__copy">{slide.copy}</Paragraph>
+                  <Space size={12} wrap>
+                    <Link to={slide.href}><Button type="primary" size="large">{slide.action} <ArrowRightOutlined /></Button></Link>
+                    <Link to="/products"><Button size="large">Xem danh mục</Button></Link>
+                  </Space>
+                </Col>
+                <Col xs={24} lg={10}>
+                  {slide.product ? (
+                    <div className="store-hero__product">
+                      <ProductArtwork product={slide.product} large />
+                      <div className="store-hero__product-note"><span>{slide.product.category}</span><strong>{slide.product.name}</strong></div>
+                    </div>
+                  ) : null}
+                </Col>
+              </Row>
             </div>
-          </Col>
-        </Row>
+          ))}
+        </Carousel>
       </section>
 
-      <section>
-        <Flex justify="space-between" align="end" gap={16} wrap className="section-heading">
-          <div><Text type="secondary">GỢI Ý HÔM NAY</Text><Title level={2}>Sản phẩm nổi bật</Title></div>
+      <section className="customer-benefit-strip" aria-label="Quyền lợi mua hàng">
+        <div><TruckOutlined /><span><strong>Giao hàng linh hoạt</strong><small>Theo địa chỉ xác nhận</small></span></div>
+        <div><SafetyCertificateOutlined /><span><strong>Tồn kho minh bạch</strong><small>Kiểm tra trước khi đặt</small></span></div>
+        <div><CreditCardOutlined /><span><strong>Thanh toán phù hợp</strong><small>Lẻ, sỉ và công nợ</small></span></div>
+        <div><CustomerServiceOutlined /><span><strong>Hỗ trợ đặt hàng</strong><small>Thông tin rõ ràng</small></span></div>
+      </section>
+
+      <section className="customer-section customer-flash-section">
+        <Flex justify="space-between" align="end" gap={16} className="section-heading">
+          <div><Text className="section-heading__eyebrow"><GiftOutlined /> Gợi ý hôm nay</Text><Title level={2}>Giờ vàng giá tốt</Title><Paragraph>Các sản phẩm nổi bật từ dữ liệu cửa hàng hiện tại.</Paragraph></div>
           <Link to="/products">Xem tất cả <ArrowRightOutlined /></Link>
         </Flex>
-        <Row gutter={[20, 20]}>{featured.map((product) => <Col xs={24} sm={12} lg={6} key={product.id}><ProductCard product={product} /></Col>)}</Row>
+        <Row gutter={[20, 20]}>{flashProducts.map((product) => <Col xs={24} sm={12} lg={6} key={product.id}><ProductCard product={product} /></Col>)}</Row>
       </section>
 
-      <Row gutter={[20, 20]}>
-        <Col xs={24} md={8}><Card className="benefit-card"><Space align="start"><div className="benefit-icon"><ShopOutlined /></div><div><Title level={5}>Mua lẻ và mua sỉ</Title><Text type="secondary">Tự động áp dụng đúng bảng giá theo tài khoản.</Text></div></Space></Card></Col>
-        <Col xs={24} md={8}><Card className="benefit-card"><Space align="start"><div className="benefit-icon"><TruckOutlined /></div><div><Title level={5}>Tồn kho minh bạch</Title><Text type="secondary">Kiểm tra số lượng khả dụng trước khi đặt hàng.</Text></div></Space></Card></Col>
-        <Col xs={24} md={8}><Card className="benefit-card"><Space align="start"><div className="benefit-icon"><SafetyCertificateOutlined /></div><div><Title level={5}>Theo dõi đơn dễ dàng</Title><Text type="secondary">Cập nhật trạng thái đơn từ xác nhận đến giao hàng.</Text></div></Space></Card></Col>
-      </Row>
+      <section className="customer-section customer-industry-section">
+        <Flex justify="space-between" align="end" gap={16} className="section-heading">
+          <div><Text className="section-heading__eyebrow">Mua theo nhu cầu</Text><Title level={2}>Ngành hàng quen thuộc</Title></div>
+          <Segmented options={categories.slice(1)} value={activeCategory} onChange={(value) => setActiveCategory(String(value))} />
+        </Flex>
+        {categoryProducts.length ? <Row gutter={[20, 20]}>{categoryProducts.map((product) => <Col xs={24} sm={12} lg={6} key={product.id}><ProductCard product={product} /></Col>)}</Row> : <Empty description="Ngành hàng đang được cập nhật" />}
+      </section>
+
+      <section className="customer-section customer-brand-section">
+        <Flex justify="space-between" align="end" gap={16} className="section-heading">
+          <div><Text className="section-heading__eyebrow">Đang có trên SalesHub</Text><Title level={2}>Thương hiệu trong danh mục</Title></div>
+          <Link to="/products">Tìm theo thương hiệu <CaretRightOutlined /></Link>
+        </Flex>
+        <div className="customer-brand-grid">
+          {brands.map((brand) => <Link key={brand} to={`/products?q=${encodeURIComponent(brand)}`}><span>{brand.slice(0, 2).toUpperCase()}</span><strong>{brand}</strong></Link>)}
+        </div>
+      </section>
+
+      <section className="customer-wholesale-banner">
+        <div><Text>Cho doanh nghiệp và đại lý</Text><Title level={2}>Mua sỉ không cần đoán chính sách giá.</Title><Paragraph>Đăng nhập đúng hồ sơ để xem MOQ, bậc giá và hạn mức công nợ đang áp dụng.</Paragraph></div>
+        <Link to="/account"><Button size="large">Kiểm tra hồ sơ mua hàng <ArrowRightOutlined /></Button></Link>
+      </section>
     </Space>
   );
 }
@@ -157,28 +249,38 @@ export function ProductsPage() {
   const keyword = searchParams.get('q') ?? '';
   const category = searchParams.get('category') ?? 'Tất cả';
   const sort = searchParams.get('sort') ?? 'featured';
+  const stock = searchParams.get('stock') ?? 'all';
+  const brand = searchParams.get('brand') ?? 'all';
+  const brands = getStorefrontBrands(products);
 
   const filtered = useMemo(() => {
     const normalized = keyword.trim().toLocaleLowerCase('vi');
     const result = products.filter((product) => (category === 'Tất cả' || product.category === category)
-      && (!normalized || `${product.name} ${product.sku} ${product.brand}`.toLocaleLowerCase('vi').includes(normalized)));
+      && (brand === 'all' || product.brand === brand)
+      && (stock === 'all' || (stock === 'available' ? product.availableStock > 0 : product.availableStock <= 0))
+      && (!normalized || `${product.name} ${product.sku} ${product.brand} ${product.category}`.toLocaleLowerCase('vi').includes(normalized)));
     return [...result].sort((a, b) => sort === 'price-asc' ? a.retailPrice - b.retailPrice : sort === 'price-desc' ? b.retailPrice - a.retailPrice : Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
-  }, [category, keyword, products, sort]);
+  }, [brand, category, keyword, products, sort, stock]);
 
   const updateParam = (key: string, value: string) => {
     const next = new URLSearchParams(searchParams);
-    if (!value || value === 'Tất cả' || value === 'featured') next.delete(key); else next.set(key, value);
+    if (!value || value === 'Tất cả' || value === 'featured' || value === 'all') next.delete(key); else next.set(key, value);
     setSearchParams(next);
   };
 
   return (
-    <Space direction="vertical" size={24} style={{ width: '100%' }}>
+    <Space direction="vertical" size={24} className="customer-page-stack customer-catalog-page">
       <Breadcrumb items={[{ title: <Link to="/">Trang chủ</Link> }, { title: 'Sản phẩm' }]} />
-      <PageHeader title="Danh sách sản phẩm" description={`${filtered.length} sản phẩm đang phù hợp với lựa chọn của bạn`} />
+      <div className="catalog-heading">
+        <div><Text className="section-heading__eyebrow">Danh mục SalesHub</Text><Title level={1}>Sản phẩm cho mọi nhu cầu</Title><Paragraph>{filtered.length} sản phẩm phù hợp với lựa chọn hiện tại.</Paragraph></div>
+        <div className="catalog-heading__note"><SearchOutlined /><span>Tìm theo tên, SKU, thương hiệu hoặc ngành hàng</span></div>
+      </div>
       <Card className="catalog-toolbar">
-        <Flex gap={16} align="center" justify="space-between" wrap>
+        <Flex gap={12} align="center" wrap>
           <Input.Search value={keyword} onChange={(event) => updateParam('q', event.target.value)} allowClear placeholder="Tìm tên, SKU hoặc thương hiệu" className="catalog-search" />
-          <Select value={sort} onChange={(value) => updateParam('sort', value)} style={{ width: 180 }} options={[{ value: 'featured', label: 'Nổi bật' }, { value: 'price-asc', label: 'Giá thấp đến cao' }, { value: 'price-desc', label: 'Giá cao đến thấp' }]} />
+          <Select aria-label="Lọc thương hiệu" value={brand} onChange={(value) => updateParam('brand', value)} className="catalog-select" options={[{ value: 'all', label: 'Mọi thương hiệu' }, ...brands.map((item) => ({ value: item, label: item }))]} />
+          <Select aria-label="Lọc tồn kho" value={stock} onChange={(value) => updateParam('stock', value)} className="catalog-select" options={[{ value: 'all', label: 'Mọi trạng thái' }, { value: 'available', label: 'Còn hàng' }, { value: 'sold-out', label: 'Hết hàng' }]} />
+          <Select aria-label="Sắp xếp sản phẩm" value={sort} onChange={(value) => updateParam('sort', value)} className="catalog-select" options={[{ value: 'featured', label: 'Nổi bật' }, { value: 'price-asc', label: 'Giá thấp đến cao' }, { value: 'price-desc', label: 'Giá cao đến thấp' }]} />
         </Flex>
         <Segmented block options={categories} value={category} onChange={(value) => updateParam('category', String(value))} className="category-tabs" />
       </Card>
@@ -193,8 +295,10 @@ export function ProductDetailPage() {
   const { message } = App.useApp();
   const product = products.find((item) => item.id === Number(id));
   const [quantity, setQuantity] = useState(activeCustomer.type === 'WHOLESALE' ? product?.moq ?? 1 : 1);
+  const [selectedArtwork, setSelectedArtwork] = useState<ArtworkView>('front');
 
   if (!product) return <Empty description="Không tìm thấy sản phẩm" />;
+  const storefront = getStorefrontProductView(product);
   const unitPrice = getUnitPrice(product, quantity, activeCustomer.type);
   const invalidMoq = activeCustomer.type === 'WHOLESALE' && quantity < (product.moq ?? 1);
   const add = () => {
@@ -204,18 +308,33 @@ export function ProductDetailPage() {
   };
 
   return (
-    <Space direction="vertical" size={24} style={{ width: '100%' }}>
+    <Space direction="vertical" size={24} className="customer-page-stack product-detail-page">
       <Breadcrumb items={[{ title: <Link to="/">Trang chủ</Link> }, { title: <Link to="/products">Sản phẩm</Link> }, { title: product.name }]} />
       <Card className="product-detail-card">
         <Row gutter={[48, 32]}>
-          <Col xs={24} md={11}><ProductArtwork product={product} large /></Col>
+          <Col xs={24} md={11}>
+            <div className="product-gallery">
+              <ProductArtwork product={product} large view={selectedArtwork} />
+              <div className="product-gallery__thumbs" aria-label="Ảnh sản phẩm">
+                {storefront.gallery.map((view) => (
+                  <button key={view} type="button" className={selectedArtwork === view ? 'is-active' : ''} onClick={() => setSelectedArtwork(view)} aria-label={`Xem ${view}`}>
+                    <ProductArtwork product={product} view={view} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </Col>
           <Col xs={24} md={13}>
             <Space direction="vertical" size={18} style={{ width: '100%' }}>
-              <Space><Tag color="blue">{product.category}</Tag><Text type="secondary">SKU: {product.sku}</Text></Space>
+              <Flex gap={8} wrap><Tag color="blue">{product.category}</Tag><Tag bordered={false}>{product.availableStock > 0 ? 'Còn hàng' : 'Hết hàng'}</Tag><Text type="secondary">SKU: {product.sku}</Text></Flex>
               <Title level={1} className="product-detail-title">{product.name}</Title>
+              <Flex gap={10} align="center" className="product-detail-rating">
+                <Rate disabled allowHalf value={storefront.rating ?? 0} />
+                <Text type="secondary">{storefront.reviewCount ? `${storefront.reviewCount} đánh giá` : 'Chưa có đánh giá'}</Text>
+              </Flex>
               <ProductPrice product={product} quantity={quantity} />
               <Paragraph type="secondary" style={{ fontSize: 16 }}>{product.description}</Paragraph>
-              <Descriptions column={1} size="small" items={[{ key: 'brand', label: 'Thương hiệu', children: product.brand }, { key: 'unit', label: 'Đơn vị', children: product.unit }, { key: 'stock', label: 'Tồn khả dụng', children: `${product.availableStock} ${product.unit.toLowerCase()}` }, { key: 'barcode', label: 'Barcode', children: product.barcode }]} />
+              <div className="product-detail-benefits"><span><SafetyCertificateOutlined /> {storefront.warrantyLabel}</span><span><TruckOutlined /> Giao theo địa chỉ xác nhận</span></div>
               {activeCustomer.type === 'WHOLESALE' ? (
                 <Alert type="info" showIcon message={`Giá sỉ · MOQ ${product.moq} ${product.unit.toLowerCase()}`} description={(product.priceTiers ?? []).map((tier) => `Từ ${tier.minQuantity}${tier.maxQuantity ? `–${tier.maxQuantity}` : '+'}: ${formatCurrency(tier.unitPrice)}`).join('  ·  ')} />
               ) : null}
@@ -227,6 +346,33 @@ export function ProductDetailPage() {
             </Space>
           </Col>
         </Row>
+      </Card>
+      <Card className="product-information-card">
+        <Tabs
+          defaultActiveKey="description"
+          items={[
+            {
+              key: 'description',
+              label: 'Mô tả sản phẩm',
+              children: <div className="product-copy"><Title level={3}>Thông tin sản phẩm</Title><Paragraph>{product.description}</Paragraph><Paragraph type="secondary">Thông tin hiển thị được lấy từ dữ liệu sản phẩm dùng chung của SalesHub.</Paragraph></div>,
+            },
+            {
+              key: 'specs',
+              label: 'Thông số',
+              children: <Descriptions bordered size="small" column={{ xs: 1, sm: 2 }} items={storefront.specs.map((spec) => ({ key: spec.label, label: spec.label, children: spec.value }))} />,
+            },
+            {
+              key: 'reviews',
+              label: `Đánh giá (${storefront.reviewCount})`,
+              children: storefront.reviews.length ? <List dataSource={storefront.reviews} renderItem={(review) => <List.Item><List.Item.Meta title={<Space><Text strong>{review.author}</Text><Rate disabled value={review.rating} /></Space>} description={<><Paragraph>{review.comment}</Paragraph><Text type="secondary">{review.createdAt}</Text></>} /></List.Item>} /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa có đánh giá được xác minh cho sản phẩm này"><Button>Viết đánh giá đầu tiên</Button></Empty>,
+            },
+            {
+              key: 'video',
+              label: 'Video',
+              children: <div className="product-video-placeholder"><PlayCircleOutlined /><div><Title level={4}>Video sản phẩm đang được cập nhật</Title><Paragraph type="secondary">SalesHub chưa có nguồn video đã xác minh cho mặt hàng này.</Paragraph></div></div>,
+            },
+          ]}
+        />
       </Card>
     </Space>
   );
