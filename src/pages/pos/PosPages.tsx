@@ -62,7 +62,7 @@ export function PosLoginPage() {
     }, 350);
   };
   return (
-    <div className="pos-shell pos-login-page">
+    <div className="pos-login-page">
       <Card className="pos-login-card">
         <div className="pos-login-logo"><ShopOutlined /></div>
         <Title level={2}>Đăng nhập POS</Title>
@@ -107,7 +107,9 @@ export function PosOverviewPage() {
 function PosProductButton({ product, onAdd }: { product: CatalogProduct; onAdd: () => void }) {
   return (
     <button className="pos-product" type="button" onClick={onAdd} disabled={product.availableStock <= 0}>
-      <span className="pos-product__icon" style={{ background: product.color }}>{product.icon}</span>
+      <div className="pos-product__icon" style={{ background: '#f8fafc', overflow: 'hidden' }}>
+        <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+      </div>
       <span className="pos-product__name">{product.name}</span>
       <strong>{formatCurrency(product.retailPrice)}</strong>
       <small>{product.availableStock > 0 ? `Tồn ${product.availableStock}` : 'Hết hàng'}</small>
@@ -205,7 +207,7 @@ export function PosSalePage() {
         </div>
       </aside>
 
-      <Modal rootClassName="pos-payment-modal" title="Thanh toán đơn hàng" open={paymentOpen} onCancel={() => setPaymentOpen(false)} okText="Hoàn tất thanh toán" cancelText="Quay lại" onOk={checkout} okButtonProps={{ disabled: paymentMethod === 'cash' && tendered < total }}>
+      <Modal title="Thanh toán đơn hàng" open={paymentOpen} onCancel={() => setPaymentOpen(false)} okText="Hoàn tất thanh toán" cancelText="Quay lại" onOk={checkout} okButtonProps={{ disabled: paymentMethod === 'cash' && tendered < total }}>
         <div className="payment-total"><Text type="secondary">Khách cần trả</Text><Title level={1}>{formatCurrency(total)}</Title></div>
         <Radio.Group value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value)} className="pos-payment-methods"><Radio.Button value="cash">Tiền mặt</Radio.Button><Radio.Button value="card">Thẻ</Radio.Button><Radio.Button value="transfer">Chuyển khoản</Radio.Button></Radio.Group>
         {paymentMethod === 'cash' ? <Space direction="vertical" style={{ width: '100%', marginTop: 20 }}><Text>Khách đưa</Text><InputNumber size="large" min={0} value={tendered} onChange={(value) => setTendered(value ?? 0)} formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')} style={{ width: '100%' }} /><Flex justify="space-between"><Text>Tiền thừa</Text><Text strong type="success">{formatCurrency(Math.max(0, tendered - total))}</Text></Flex></Space> : <Alert type="info" showIcon message={paymentMethod === 'card' ? 'Sẵn sàng nhận thanh toán qua máy POS' : 'Quét mã QR tại quầy để chuyển khoản'} style={{ marginTop: 20 }} />}
@@ -245,4 +247,3 @@ export function PosReceiptPage() {
     </Space>
   );
 }
-
