@@ -26,7 +26,7 @@ interface ProductTableProps {
 
 export function ProductTable({ products, loading = false, page, pageSize, total, onPaginationChange, onCreate, onView, onEdit, onRequestActiveChange }: ProductTableProps) {
   const columns: TableProps<AdminProductRecord>['columns'] = [
-    { title: 'Mã hàng', dataIndex: 'code', width: 120, fixed: 'left', render: (value: string) => <Typography.Text className="admin-products__sku">{value}</Typography.Text> },
+    { title: 'Mã hàng', dataIndex: 'code', width: 120, render: (value: string) => <Typography.Text className="admin-products__sku">{value}</Typography.Text> },
     { title: 'SKU', dataIndex: 'sku', width: 145, render: (value: string) => <Typography.Text className="admin-products__sku">{value}</Typography.Text> },
     { title: 'Tên sản phẩm', dataIndex: 'name', width: 270, render: (value: string) => <Typography.Text strong>{value}</Typography.Text> },
     { title: 'Nhóm hàng', dataIndex: 'categoryName', width: 165 },
@@ -35,11 +35,12 @@ export function ProductTable({ products, loading = false, page, pageSize, total,
     { title: 'Giá bán lẻ', dataIndex: 'retailPrice', align: 'right', width: 145, render: (value: number) => <span className="admin-products__number">{currencyFormatter.format(value)}</span> },
     { title: 'Giá bán sỉ', dataIndex: 'wholesalePrice', align: 'right', width: 145, render: (value: number) => <span className="admin-products__number">{currencyFormatter.format(value)}</span> },
     { title: 'Trạng thái', dataIndex: 'status', width: 180, render: (_, record) => <Flex vertical align="flex-start" gap={4}><ProductStatusTag status={record.status} />{!record.isActive ? <Tag>Đã tắt</Tag> : null}</Flex> },
-    { title: 'Thao tác', key: 'actions', fixed: 'right', width: 245, render: (_, product) => <Space size={2} className="admin-products__row-actions"><Button type="text" size="small" icon={<EyeOutlined />} onClick={() => onView(product)}>Xem</Button><Button type="text" size="small" icon={<EditOutlined />} onClick={() => onEdit(product)}>Sửa</Button><Button type="text" size="small" danger={product.isActive} icon={product.isActive ? <PauseCircleOutlined /> : <PlayCircleOutlined />} onClick={() => onRequestActiveChange(product)}>{product.isActive ? 'Tắt' : 'Bật'}</Button></Space> },
+    { title: 'Thao tác', key: 'actions', width: 245, render: (_, product) => <Space size={2} className="admin-products__row-actions"><Button type="text" size="small" icon={<EyeOutlined />} onClick={() => onView(product)}>Xem</Button><Button type="text" size="small" icon={<EditOutlined />} onClick={() => onEdit(product)}>Sửa</Button><Button type="text" size="small" danger={product.isActive} icon={product.isActive ? <PauseCircleOutlined /> : <PlayCircleOutlined />} onClick={() => onRequestActiveChange(product)}>{product.isActive ? 'Tắt' : 'Bật'}</Button></Space> },
   ];
   return <Table<AdminProductRecord>
     className="admin-products__table"
     rowKey="id"
+    tableLayout="fixed"
     columns={columns}
     dataSource={products}
     loading={loading}

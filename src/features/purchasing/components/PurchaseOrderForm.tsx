@@ -44,6 +44,7 @@ interface PurchaseOrderFormFields {
 
 interface PurchaseOrderFormProps {
   order?: PurchaseOrderDetail;
+  retailOnly?: boolean;
   references: PurchaseReferenceData;
   submitting?: boolean;
   onSubmit: (values: PurchaseOrderFormValues) => void;
@@ -60,6 +61,7 @@ function emptyItem() {
 
 export function PurchaseOrderForm({
   order,
+  retailOnly = false,
   references,
   submitting = false,
   onSubmit,
@@ -99,6 +101,7 @@ export function PurchaseOrderForm({
       orderDate: values.orderDate.startOf('day').format(),
       expectedDate: values.expectedDate.startOf('day').format(),
       requiresApproval: values.requiresApproval,
+      orderKind: retailOnly ? 'RETAIL' : (order?.orderKind ?? 'STANDARD'),
       note: values.note,
       items: values.items.map((item) => ({
         id: item.id,
@@ -351,7 +354,7 @@ export function PurchaseOrderForm({
         <Flex gap={8}>
           <Button disabled={submitting} onClick={onCancel}>Hủy</Button>
           <Button type="primary" htmlType="submit" loading={submitting}>
-            {order ? 'Lưu thay đổi' : 'Tạo đơn mua'}
+            {order ? 'Lưu thay đổi' : (retailOnly ? 'Tạo đơn mua lẻ' : 'Tạo đơn mua')}
           </Button>
         </Flex>
       </Flex>

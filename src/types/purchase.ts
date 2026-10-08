@@ -10,6 +10,7 @@ export type PurchaseOrderStatus =
   | 'REJECTED';
 
 export type PurchaseSourceType = 'MANUAL' | 'AI_PROPOSAL' | 'RULE_ENGINE';
+export type PurchaseOrderKind = 'STANDARD' | 'RETAIL';
 
 export interface PurchaseOrder {
   id: number;
@@ -24,6 +25,7 @@ export interface PurchaseOrder {
   approvedBy: number | null;
   approvedAt: string | null;
   sourceType: PurchaseSourceType;
+  orderKind: PurchaseOrderKind;
   note: string | null;
   version: number;
   createdBy: number;

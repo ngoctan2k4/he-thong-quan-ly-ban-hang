@@ -8,7 +8,11 @@ import { usePurchaseOrderForm } from '../../features/purchasing/hooks/useAdminPu
 import type { PurchaseOrderFormValues } from '../../features/purchasing/purchasing.model';
 import '../../features/purchasing/purchasing.css';
 
-export function AdminPurchaseOrderFormPage() {
+interface AdminPurchaseOrderFormPageProps {
+  retailOnly?: boolean;
+}
+
+export function AdminPurchaseOrderFormPage({ retailOnly = false }: AdminPurchaseOrderFormPageProps) {
   const navigate = useNavigate();
   const params = useParams<{ id?: string }>();
   const { message, modal } = App.useApp();
@@ -18,7 +22,8 @@ export function AdminPurchaseOrderFormPage() {
     usePurchaseOrderForm(orderId);
   const isEdit = orderId !== undefined;
 
-  const leavePage = () => navigate('/admin/purchase/orders');
+  const listPath = retailOnly ? '/admin/purchase/retail-orders' : '/admin/purchase/orders';
+  const leavePage = () => navigate(listPath);
   const requestLeave = () => {
     modal.confirm({
       title: 'Rời biểu mẫu?',
@@ -37,7 +42,7 @@ export function AdminPurchaseOrderFormPage() {
         void message.success('Đã cập nhật đơn mua.');
       } else {
         await createPurchaseOrder(values);
-        void message.success('Đã tạo đơn mua nháp.');
+        void message.success(retailOnly ? 'Đã tạo đơn mua lẻ nháp.' : 'Đã tạo đơn mua nháp.');
       }
       leavePage();
     } catch (error) {
@@ -52,8 +57,12 @@ export function AdminPurchaseOrderFormPage() {
     <div className="purchasing-page purchasing-form-page">
       <Flex vertical gap={12}>
         <PageHeader
-          title={isEdit ? 'Sửa đơn mua' : 'Tạo đơn mua'}
-          description="Đơn tạo thủ công luôn có nguồn MANUAL và không làm tăng tồn kho."
+          title={isEdit
+            ? (retailOnly ? 'Sửa đơn mua hàng lẻ' : 'Sửa đơn mua')
+            : (retailOnly ? 'Tạo đơn mua hàng lẻ' : 'Tạo đơn mua')}
+          description={retailOnly
+            ? 'Đơn mua lẻ được tạo thủ công và không làm tăng tồn kho trước khi nhận hàng.'
+            : 'Đơn tạo thủ công luôn có nguồn MANUAL và không làm tăng tồn kho.'}
           extra={<Button icon={<ArrowLeftOutlined />} onClick={requestLeave}>Quay lại</Button>}
         />
         {loading ? <Skeleton active paragraph={{ rows: 12 }} /> : null}
@@ -69,6 +78,7 @@ export function AdminPurchaseOrderFormPage() {
         {!loading && !error && referencesQuery.data ? (
           <PurchaseOrderForm
             order={detailQuery.data}
+            retailOnly={retailOnly}
             references={referencesQuery.data}
             submitting={isSaving}
             onSubmit={(values) => void handleSubmit(values)}

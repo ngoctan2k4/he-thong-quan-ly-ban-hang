@@ -1,0 +1,74 @@
+/* Hallmark · macrostructure: Catalogue · genre: modern-minimal · tone: technical · anchor hue: cobalt · nav: existing N3 · footer: none
+ * pre-emit critique: P5 H5 E4 S5 R5 V4 · contrast: pass (40–41) · slop: pass (42–45) · honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (49) · mobile: pass (34, 49, 50–57)
+ */
+@import '../../../tokens.css';
+
+.admin-accounting-page .ant-select,
+.admin-accounting-page .ant-input-number {
+  width: 100%;
+}
+
+.admin-accounting-page .ant-btn,
+.admin-accounting-page .ant-pagination-item a {
+  white-space: nowrap;
+}
+
+.accounting-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-block: var(--rule-thin) solid var(--color-rule);
+}
+
+.accounting-summary > div {
+  min-width: 0;
+  padding: var(--space-md) var(--space-lg);
+  border-inline-end: var(--rule-thin) solid var(--color-rule);
+}
+
+.accounting-summary > div:last-child {
+  border-inline-end: 0;
+}
+
+.accounting-summary span,
+.accounting-summary strong {
+  display: block;
+}
+
+.accounting-summary span {
+  margin-block-end: var(--space-xs);
+  color: var(--admin-text-secondary, var(--color-ink));
+  font-size: var(--text-sm);
+}
+
+.accounting-summary strong,
+.accounting-code,
+.accounting-money {
+  font-variant-numeric: tabular-nums;
+}
+
+.accounting-summary strong {
+  overflow-wrap: anywhere;
+  color: var(--admin-text, var(--color-ink));
+  font-size: var(--text-md);
+}
+
+@media (min-width: 40rem) {
+  .accounting-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 68rem) {
+  .accounting-summary {
+    grid-template-columns: 0.7fr 1.35fr 1.2fr 1.4fr 0.7fr;
+  }
+}
+
+@media (pointer: coarse) {
+  .admin-accounting-page .ant-btn,
+  .admin-accounting-page .ant-input,
+  .admin-accounting-page .ant-select-selector,
+  .admin-accounting-page .ant-input-number {
+    min-height: 44px;
+  }
+}

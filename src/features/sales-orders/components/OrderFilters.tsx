@@ -34,6 +34,9 @@ export function OrderFilters({
   onReset,
 }: OrderFiltersProps) {
   const [keyword, setKeyword] = useState(filters.keyword);
+  const channelOptions = Object.entries(channelLabels)
+    .filter(([value]) => !filters.retailOnly || value !== 'WHOLESALE')
+    .map(([value, label]) => ({ value, label }));
 
   useEffect(() => setKeyword(filters.keyword), [filters.keyword]);
 
@@ -75,7 +78,7 @@ export function OrderFilters({
             style={{ width: '100%' }}
             options={[
               { value: 'ALL', label: 'Tất cả kênh' },
-              ...Object.entries(channelLabels).map(([value, label]) => ({ value, label })),
+              ...channelOptions,
             ]}
             onChange={(channel) =>
               onChange({ ...filters, channel: channel as SalesOrderFilters['channel'] })

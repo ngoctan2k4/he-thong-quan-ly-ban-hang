@@ -1,0 +1,59 @@
+/* Hallmark · macrostructure: Operations ledger · tone: utilitarian · anchor hue: cobalt
+ * pre-emit critique: P5 H4 E4 S5 R5 V4
+ */
+@import '../../../tokens.css';
+
+.admin-operations-page .ant-select,
+.admin-ai-page .ant-select,
+.admin-approvals-page .ant-select,
+.admin-audit-page .ant-select {
+  width: 100%;
+}
+
+.admin-operation-code {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.admin-ai-chat {
+  min-height: 520px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  border: 1px solid var(--admin-border, var(--border));
+  border-radius: var(--admin-radius, 10px);
+  background: var(--admin-bg-container, var(--surface));
+  overflow: clip;
+}
+
+.admin-ai-chat__messages {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.admin-ai-chat__message {
+  max-width: 760px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  white-space: pre-wrap;
+}
+
+.admin-ai-chat__message--assistant {
+  background: var(--admin-fill, var(--bg));
+}
+
+.admin-ai-chat__message--user {
+  margin-left: auto;
+  color: var(--surface);
+  background: var(--admin-primary, var(--primary));
+}
+
+.admin-ai-chat__composer {
+  padding: 12px;
+  border-top: 1px solid var(--admin-border, var(--border));
+}
+
+@media (max-width: 575px) {
+  .admin-ai-chat { min-height: 440px; }
+  .admin-ai-chat__messages { padding: 12px; }
+  .admin-ai-chat__message { max-width: 92%; }
+}

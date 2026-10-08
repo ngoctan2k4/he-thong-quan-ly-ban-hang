@@ -15,6 +15,7 @@ export type GoodsReceiptStatusFilter = 'ALL' | GoodsReceiptStatus;
 
 export interface PurchaseOrderFilters {
   keyword: string;
+  retailOnly?: boolean;
   supplierId?: number;
   warehouseId?: number;
   status: PurchaseOrderStatusFilter;
@@ -129,6 +130,7 @@ export interface PurchaseOrderFormValues {
   orderDate: string;
   expectedDate: string;
   requiresApproval: boolean;
+  orderKind: PurchaseOrder['orderKind'];
   note?: string;
   items: PurchaseOrderItemFormValues[];
 }

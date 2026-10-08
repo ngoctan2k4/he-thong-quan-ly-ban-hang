@@ -16,9 +16,10 @@ import type { OrderChannel } from '../../types/order';
 
 interface AdminSalesOrdersPageProps {
   channel?: OrderChannel;
+  retailOnly?: boolean;
 }
 
-const pageCopy: Record<OrderChannel | 'ALL', { title: string; description: string }> = {
+const pageCopy: Record<OrderChannel | 'ALL' | 'RETAIL', { title: string; description: string }> = {
   ALL: {
     title: 'Đơn đặt hàng',
     description: 'Theo dõi tập trung đơn hàng Website, POS và Wholesale theo dữ liệu V4.',
@@ -35,12 +36,16 @@ const pageCopy: Record<OrderChannel | 'ALL', { title: string; description: strin
     title: 'Đơn Wholesale',
     description: 'Theo dõi đơn bán sỉ và thông tin phê duyệt có trong V4.',
   },
+  RETAIL: {
+    title: 'Đơn đặt hàng lẻ',
+    description: 'Theo dõi đơn bán lẻ phát sinh từ Website và điểm bán POS.',
+  },
 };
 
-export function AdminSalesOrdersPage({ channel }: AdminSalesOrdersPageProps) {
+export function AdminSalesOrdersPage({ channel, retailOnly = false }: AdminSalesOrdersPageProps) {
   const defaultFilters = useMemo<SalesOrderFilters>(
-    () => ({ ...initialSalesOrderFilters, channel: channel ?? 'ALL' }),
-    [channel],
+    () => ({ ...initialSalesOrderFilters, channel: channel ?? 'ALL', retailOnly }),
+    [channel, retailOnly],
   );
   const [filters, setFilters] = useState(defaultFilters);
   const [page, setPage] = useState(1);
@@ -72,7 +77,7 @@ export function AdminSalesOrdersPage({ channel }: AdminSalesOrdersPageProps) {
   const listResult = listQuery.data;
   const orders = listResult?.content ?? [];
   const total = listResult?.totalElements ?? 0;
-  const copy = pageCopy[channel ?? 'ALL'];
+  const copy = pageCopy[retailOnly ? 'RETAIL' : channel ?? 'ALL'];
 
   return (
     <div className="sales-orders-page">

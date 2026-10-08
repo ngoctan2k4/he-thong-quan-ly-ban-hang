@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { App, Button, Flex, Skeleton, Spin, Typography } from 'antd';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AdminListPage } from '../../components/admin/AdminListPage';
 import { ConfirmModal } from '../../components/common/ConfirmModal';
@@ -16,10 +16,18 @@ import {
 } from '../../features/purchasing/purchasing.model';
 import '../../features/purchasing/purchasing.css';
 
-export function AdminPurchaseOrdersPage() {
+interface AdminPurchaseOrdersPageProps {
+  retailOnly?: boolean;
+}
+
+export function AdminPurchaseOrdersPage({ retailOnly = false }: AdminPurchaseOrdersPageProps) {
   const navigate = useNavigate();
   const { message } = App.useApp();
-  const [filters, setFilters] = useState<PurchaseOrderFilters>(initialPurchaseOrderFilters);
+  const defaultFilters = useMemo<PurchaseOrderFilters>(
+    () => ({ ...initialPurchaseOrderFilters, retailOnly }),
+    [retailOnly],
+  );
+  const [filters, setFilters] = useState<PurchaseOrderFilters>(defaultFilters);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [selectedOrderId, setSelectedOrderId] = useState<number>();
@@ -57,19 +65,24 @@ export function AdminPurchaseOrdersPage() {
 
   const orders = listQuery.data?.content ?? [];
   const total = listQuery.data?.totalElements ?? 0;
+  const listPath = retailOnly ? '/admin/purchase/retail-orders' : '/admin/purchase/orders';
+  const title = retailOnly ? 'Đơn mua hàng lẻ' : 'Đơn mua';
+  const description = retailOnly
+    ? 'Quản lý các đơn mua lẻ và tiến độ nhận hàng.'
+    : 'Quản lý đơn mua, nguồn đề xuất và tiến độ nhận hàng theo dữ liệu V5.';
 
   return (
     <div className="purchasing-page">
       <AdminListPage
-        title="Đơn mua"
-        description="Quản lý đơn mua, nguồn đề xuất và tiến độ nhận hàng theo dữ liệu V5."
+        title={title}
+        description={description}
         primaryAction={(
           <Button
             type="primary"
             icon={<PlusOutlined />}
-            onClick={() => navigate('/admin/purchase/orders/new')}
+            onClick={() => navigate(`${listPath}/new`)}
           >
-            Tạo đơn mua
+            {retailOnly ? 'Tạo đơn mua lẻ' : 'Tạo đơn mua'}
           </Button>
         )}
         toolbar={(
@@ -79,7 +92,7 @@ export function AdminPurchaseOrdersPage() {
             loading={listQuery.isFetching}
             onChange={handleFilterChange}
             onReset={() => {
-              setFilters(initialPurchaseOrderFilters);
+              setFilters(defaultFilters);
               setPage(1);
             }}
           />
@@ -117,7 +130,7 @@ export function AdminPurchaseOrdersPage() {
               setPageSize(nextPageSize);
             }}
             onView={openDetail}
-            onEdit={(order) => navigate(`/admin/purchase/orders/${order.id}/edit`)}
+            onEdit={(order) => navigate(`${listPath}/${order.id}/edit`)}
             onCancel={setPendingCancel}
           />
         ) : null}
@@ -133,7 +146,7 @@ export function AdminPurchaseOrdersPage() {
           setDetailOpen(false);
           setSelectedOrderId(undefined);
         }}
-        onEdit={(order) => navigate(`/admin/purchase/orders/${order.id}/edit`)}
+        onEdit={(order) => navigate(`${listPath}/${order.id}/edit`)}
         onCreateReceipt={(order) => navigate(`/admin/purchase/goods-receipts/new?purchaseOrderId=${order.id}`)}
       />
 

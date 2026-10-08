@@ -145,6 +145,7 @@ const seedPurchaseOrders: PurchaseOrder[] = [
     approvedBy: null,
     approvedAt: null,
     sourceType: 'MANUAL',
+    orderKind: 'RETAIL',
     note: 'Giao trong giờ hành chính.',
     version: 1,
     createdBy: 21,
@@ -164,6 +165,7 @@ const seedPurchaseOrders: PurchaseOrder[] = [
     approvedBy: null,
     approvedAt: null,
     sourceType: 'AI_PROPOSAL',
+    orderKind: 'STANDARD',
     note: 'Đề xuất theo tốc độ bán 30 ngày.',
     version: 2,
     createdBy: 22,
@@ -183,6 +185,7 @@ const seedPurchaseOrders: PurchaseOrder[] = [
     approvedBy: 11,
     approvedAt: '2026-09-26T10:30:00+07:00',
     sourceType: 'MANUAL',
+    orderKind: 'RETAIL',
     note: null,
     version: 3,
     createdBy: 21,
@@ -202,6 +205,7 @@ const seedPurchaseOrders: PurchaseOrder[] = [
     approvedBy: null,
     approvedAt: null,
     sourceType: 'RULE_ENGINE',
+    orderKind: 'STANDARD',
     note: 'Bổ sung tồn tối thiểu cho kho HCM.',
     version: 4,
     createdBy: 22,
@@ -221,6 +225,7 @@ const seedPurchaseOrders: PurchaseOrder[] = [
     approvedBy: null,
     approvedAt: null,
     sourceType: 'MANUAL',
+    orderKind: 'RETAIL',
     note: null,
     version: 5,
     createdBy: 21,
@@ -240,6 +245,7 @@ const seedPurchaseOrders: PurchaseOrder[] = [
     approvedBy: 12,
     approvedAt: '2026-09-18T11:00:00+07:00',
     sourceType: 'AI_PROPOSAL',
+    orderKind: 'STANDARD',
     note: 'Kiểm tra kỹ tem niêm phong khi nhận.',
     version: 6,
     createdBy: 22,
@@ -259,6 +265,7 @@ const seedPurchaseOrders: PurchaseOrder[] = [
     approvedBy: null,
     approvedAt: null,
     sourceType: 'MANUAL',
+    orderKind: 'STANDARD',
     note: 'Nhà cung cấp xác nhận thiếu 8 bộ.',
     version: 4,
     createdBy: 21,
@@ -278,6 +285,7 @@ const seedPurchaseOrders: PurchaseOrder[] = [
     approvedBy: null,
     approvedAt: null,
     sourceType: 'MANUAL',
+    orderKind: 'RETAIL',
     note: 'Hủy do thay đổi kế hoạch nhập hàng.',
     version: 2,
     createdBy: 21,
@@ -297,6 +305,7 @@ const seedPurchaseOrders: PurchaseOrder[] = [
     approvedBy: 12,
     approvedAt: '2026-09-10T10:05:00+07:00',
     sourceType: 'RULE_ENGINE',
+    orderKind: 'STANDARD',
     note: 'Từ chối do vượt hạn mức ngân sách.',
     version: 2,
     createdBy: 22,
@@ -455,6 +464,7 @@ async function listPurchaseOrders(
       const matchesExpectedDate = !filters.expectedDate
         || order.expectedDate.slice(0, 10) === filters.expectedDate;
       return matchesKeyword
+        && (!filters.retailOnly || order.orderKind === 'RETAIL')
         && (!filters.supplierId || order.supplierId === filters.supplierId)
         && (!filters.warehouseId || order.warehouseId === filters.warehouseId)
         && (filters.status === 'ALL' || order.status === filters.status)
@@ -516,6 +526,7 @@ async function createPurchaseOrder(values: PurchaseOrderFormValues): Promise<Pur
     approvedBy: null,
     approvedAt: null,
     sourceType: 'MANUAL',
+    orderKind: values.orderKind,
     note: values.note?.trim() || null,
     version: 1,
     createdBy: 21,
@@ -545,6 +556,7 @@ async function updatePurchaseOrder(
     expectedDate: values.expectedDate,
     totalAmount: nextItems.reduce((sum, item) => sum + item.lineTotal, 0),
     requiresApproval: values.requiresApproval,
+    orderKind: values.orderKind,
     note: values.note?.trim() || null,
     version: current.version + 1,
     updatedAt: new Date().toISOString(),

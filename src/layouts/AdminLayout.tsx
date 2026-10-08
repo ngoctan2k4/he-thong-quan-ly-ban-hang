@@ -259,6 +259,7 @@ export function AdminLayout() {
               const isActive = module.key === activeModuleKey;
               const moduleButton = (
                 <button
+                  key={module.key}
                   type="button"
                   className={`admin-module-rail__button${isActive ? ' is-active' : ''}`}
                   aria-label={module.label}

@@ -1,0 +1,26 @@
+/* Hallmark · shared tokens · existing Ant Design / cobalt system */
+:root {
+  --color-accent: oklch(33% 0.12 264);
+  --color-paper: oklch(98% 0.01 264);
+  --color-surface: oklch(100% 0 0);
+  --color-rule: oklch(90% 0.02 264);
+  --color-ink: oklch(24% 0.04 264);
+  --font-display: "Be Vietnam Pro", Inter, system-ui, sans-serif;
+  --font-body: "Be Vietnam Pro", Inter, system-ui, sans-serif;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --text-sm: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --rule-thin: 1px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+}

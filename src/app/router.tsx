@@ -28,6 +28,12 @@ import { AdminSalesReceivablesPage } from '../pages/admin/AdminSalesReceivablesP
 import { AdminSupplierPayablesPage } from '../pages/admin/AdminSupplierPayablesPage';
 import { AdminSupplierPaymentsPage } from '../pages/admin/AdminSupplierPaymentsPage';
 import { AdminSuppliersPage } from '../pages/admin/AdminSuppliersPage';
+import { AdminInventoryOperationsPage } from '../pages/admin/AdminInventoryOperationsPage';
+import { AdminAiOperationsPage } from '../pages/admin/AdminAiOperationsPage';
+import { AdminApprovalsPage, type ApprovalTypeFilter } from '../pages/admin/AdminApprovalsPage';
+import { AdminAuditLogPage } from '../pages/admin/AdminAuditLogPage';
+import { AdminAccountingPage } from '../pages/admin/AdminAccountingPage';
+import type { AccountingVariant } from '../mocks/adminAccounting';
 import {
   AccountPage,
   CartPage,
@@ -105,6 +111,7 @@ function getAdminRouteElement(route: (typeof adminRoutes)[number]) {
   }
 
   if (route.screen === 'sales-orders') {
+    const retailOnly = route.path.endsWith('/retail-orders');
     const channel = route.path.endsWith('/website')
       ? 'WEBSITE'
       : route.path.endsWith('/pos')
@@ -112,7 +119,7 @@ function getAdminRouteElement(route: (typeof adminRoutes)[number]) {
         : route.path.endsWith('/wholesale')
           ? 'WHOLESALE'
           : undefined;
-    return <AdminSalesOrdersPage channel={channel} />;
+    return <AdminSalesOrdersPage channel={channel} retailOnly={retailOnly} />;
   }
 
   if (route.screen === 'sales-payments') {
@@ -132,11 +139,11 @@ function getAdminRouteElement(route: (typeof adminRoutes)[number]) {
   }
 
   if (route.screen === 'purchase-orders') {
-    return <AdminPurchaseOrdersPage />;
+    return <AdminPurchaseOrdersPage retailOnly={route.path.endsWith('/retail-orders')} />;
   }
 
   if (route.screen === 'purchase-order-form') {
-    return <AdminPurchaseOrderFormPage />;
+    return <AdminPurchaseOrderFormPage retailOnly={route.path.includes('/retail-orders/')} />;
   }
 
   if (route.screen === 'goods-receipts') {
@@ -145,6 +152,61 @@ function getAdminRouteElement(route: (typeof adminRoutes)[number]) {
 
   if (route.screen === 'goods-receipt-form') {
     return <AdminGoodsReceiptFormPage />;
+  }
+
+  if (route.screen === 'inventory-operations') {
+    const variant = route.path === '/admin/locations'
+      ? 'locations'
+      : route.path.endsWith('/stock-issues')
+        ? 'stock-issues'
+        : route.path.endsWith('/balance')
+          ? 'balance'
+          : route.path.endsWith('/movements')
+            ? 'movements'
+            : route.path.endsWith('/transfers')
+              ? 'transfers'
+              : route.path.endsWith('/stocktakes')
+                ? 'stocktakes'
+                : 'write-offs';
+    return <AdminInventoryOperationsPage variant={variant} />;
+  }
+
+  if (route.screen === 'ai-operations') {
+    const variant = route.path.endsWith('/chat')
+      ? 'chat'
+      : route.path.endsWith('/inventory-signals')
+        ? 'signals'
+        : route.path.endsWith('/proposals')
+          ? 'proposals'
+          : 'tool-history';
+    return <AdminAiOperationsPage variant={variant} />;
+  }
+
+  if (route.screen === 'approvals') {
+    const typeBySuffix: Record<string, ApprovalTypeFilter> = {
+      wholesale: 'WHOLESALE',
+      purchase: 'PURCHASE',
+      inventory: 'INVENTORY',
+      'write-offs': 'WRITE_OFF',
+      ai: 'AI',
+    };
+    return <AdminApprovalsPage type={typeBySuffix[route.path.split('/').at(-1) ?? ''] ?? 'ALL'} />;
+  }
+
+  if (route.screen === 'audit-logs') {
+    return <AdminAuditLogPage activityOnly={route.path.endsWith('/activity-logs')} />;
+  }
+
+  if (route.screen === 'accounting') {
+    const variantByPath: Record<string, AccountingVariant> = {
+      '/admin/accounting/purchase/goods-vouchers': 'purchase-goods',
+      '/admin/accounting/purchase/service-vouchers': 'purchase-services',
+      '/admin/accounting/purchase/returns': 'purchase-returns',
+      '/admin/accounting/sales/vouchers': 'sales-vouchers',
+      '/admin/accounting/sales/invoices': 'sales-invoices',
+      '/admin/accounting/sales/ecommerce-vouchers': 'ecommerce-vouchers',
+    };
+    return <AdminAccountingPage variant={variantByPath[route.path]} />;
   }
 
   return <AdminPlaceholderPage title={route.title} />;

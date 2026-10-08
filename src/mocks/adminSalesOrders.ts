@@ -447,6 +447,7 @@ const repository: SalesOrderRepository = {
           normalize(record.customerName).includes(keyword);
         return (
           matchesKeyword &&
+          (!filters.retailOnly || order.channel !== 'WHOLESALE') &&
           (filters.channel === 'ALL' || order.channel === filters.channel) &&
           (filters.status === 'ALL' || order.status === filters.status) &&
           (filters.paymentStatus === 'ALL' || order.paymentStatus === filters.paymentStatus) &&

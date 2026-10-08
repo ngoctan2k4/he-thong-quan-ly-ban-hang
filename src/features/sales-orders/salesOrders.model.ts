@@ -19,6 +19,7 @@ export type SalesPaymentStatusFilter = 'ALL' | PaymentTransactionStatus;
 export interface SalesOrderFilters {
   keyword: string;
   channel: SalesOrderChannelFilter;
+  retailOnly?: boolean;
   status: SalesOrderStatusFilter;
   paymentStatus: SalesOrderPaymentStatusFilter;
   branchId?: number;
