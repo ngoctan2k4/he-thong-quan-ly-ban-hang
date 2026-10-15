@@ -23,6 +23,7 @@ import {
 import type { TableProps } from 'antd';
 import { useMemo, useState } from 'react';
 import { AdminListPage } from '../../components/admin/AdminListPage';
+import { InventoryAvailabilityPage } from '../../features/inventory/InventoryAvailabilityPage';
 import {
   stockBalances,
   stockIssues as initialStockIssues,
@@ -95,7 +96,7 @@ function includesKeyword(row: InventoryRow, keyword: string) {
   return !keyword || Object.values(row).some((value) => String(value).toLocaleLowerCase('vi').includes(keyword));
 }
 
-export function AdminInventoryOperationsPage({ variant }: AdminInventoryOperationsPageProps) {
+function MockInventoryOperationsPage({ variant }: AdminInventoryOperationsPageProps) {
   const { message } = App.useApp();
   const [keyword, setKeyword] = useState('');
   const [warehouse, setWarehouse] = useState<string>();
@@ -131,13 +132,12 @@ export function AdminInventoryOperationsPage({ variant }: AdminInventoryOperatio
     });
   }, [data, keyword, warehouse]);
 
-  const commonAction = {
+  const commonAction = useMemo(() => ({
     title: 'Thao tác',
     key: 'actions',
     width: 100,
-    fixed: 'right' as const,
     render: (_: unknown, row: InventoryRow) => <Button type="link" onClick={() => setSelected(row)}>Xem</Button>,
-  };
+  }), []);
 
   const columns = useMemo<TableProps<InventoryRow>['columns']>(() => {
     if (variant === 'locations') return [
@@ -211,7 +211,7 @@ export function AdminInventoryOperationsPage({ variant }: AdminInventoryOperatio
       { title: 'Ngày đề nghị', dataIndex: 'requestedAt', width: 170, render: formatDateTime },
       commonAction,
     ];
-  }, [variant]);
+  }, [commonAction, variant]);
 
   const handleCreate = async () => {
     const values = await form.validateFields();
@@ -266,4 +266,9 @@ export function AdminInventoryOperationsPage({ variant }: AdminInventoryOperatio
       </Drawer>
     </div>
   );
+}
+
+export function AdminInventoryOperationsPage({ variant }: AdminInventoryOperationsPageProps) {
+  if (variant === 'balance' || variant === 'stock-issues') return <InventoryAvailabilityPage variant={variant} />;
+  return <MockInventoryOperationsPage variant={variant} />;
 }

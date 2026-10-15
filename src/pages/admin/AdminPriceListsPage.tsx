@@ -113,7 +113,7 @@ export function AdminPriceListsPage() {
       summary={<Typography.Text strong>{total} bảng giá</Typography.Text>}
     >
       {listQuery.isLoading ? <div className="admin-pricing__loading"><Skeleton active paragraph={{ rows: 7 }} /></div> : null}
-      {listQuery.isError ? <ErrorState message="Không thể tải danh sách bảng giá mock." onRetry={() => void listQuery.refetch()} /> : null}
+      {listQuery.isError ? <ErrorState message="Không thể tải danh sách bảng giá từ máy chủ." onRetry={() => void listQuery.refetch()} /> : null}
       {!listQuery.isLoading && !listQuery.isError ? <Table className="admin-pricing__table" rowKey="id" columns={columns} dataSource={rows} loading={listQuery.isFetching} scroll={{ x: 1380 }} pagination={{ current: page, pageSize, total, showSizeChanger: true, pageSizeOptions: [10, 20, 50], showTotal: (count) => `${count} bảng giá`, onChange: (nextPage, nextSize) => { setPage(nextSize !== pageSize ? 1 : nextPage); setPageSize(nextSize); } }} locale={{ emptyText: <Flex vertical align="center" gap={12} className="admin-pricing__empty"><EmptyState description="Chưa có bảng giá phù hợp." /><Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>Thêm bảng giá</Button></Flex> }} /> : null}
     </AdminListPage>
     <PriceListFormDrawer open={formOpen} priceList={editingPriceList} loading={isSavingPriceList} onClose={() => { setFormOpen(false); setEditingPriceList(undefined); }} onSubmit={(values) => void savePriceList(values)} />

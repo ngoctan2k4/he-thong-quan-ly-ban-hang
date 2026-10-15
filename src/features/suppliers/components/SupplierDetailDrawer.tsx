@@ -1,6 +1,7 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   Button,
+  Checkbox,
   Col,
   Descriptions,
   Drawer,
@@ -79,7 +80,8 @@ export function SupplierDetailDrawer({
       productId: product.productId,
       lastPurchasePrice: product.lastPurchasePrice,
       leadTimeDays: product.leadTimeDays,
-    } : { lastPurchasePrice: 0, leadTimeDays: supplier?.avgLeadTimeDays ?? 0 });
+      isDefaultSupplier: product.isDefaultSupplier,
+    } : { lastPurchasePrice: 0, leadTimeDays: supplier?.avgLeadTimeDays ?? 0, isDefaultSupplier: false });
     setProductModalOpen(true);
   };
 
@@ -129,7 +131,6 @@ export function SupplierDetailDrawer({
     {
       title: 'Thao tác',
       width: 145,
-      fixed: 'right',
       render: (_, product) => (
         <Space size={4}>
           <Button type="link" size="small" icon={<EditOutlined />} onClick={() => openProductModal(product)}>Sửa</Button>
@@ -242,7 +243,7 @@ export function SupplierDetailDrawer({
           form={productForm}
           layout="vertical"
           validateTrigger="onBlur"
-          initialValues={{ lastPurchasePrice: 0, leadTimeDays: 0 }}
+          initialValues={{ lastPurchasePrice: 0, leadTimeDays: 0, isDefaultSupplier: false }}
         >
           <Form.Item name="productId" label="Sản phẩm" rules={[{ required: true, message: 'Chọn sản phẩm cần liên kết.' }]}>
             <Select
@@ -283,6 +284,9 @@ export function SupplierDetailDrawer({
               </Form.Item>
             </Col>
           </Row>
+          <Form.Item name="isDefaultSupplier" valuePropName="checked">
+            <Checkbox>Đặt làm nhà cung cấp mặc định của sản phẩm</Checkbox>
+          </Form.Item>
         </Form>
       </Modal>
     </>

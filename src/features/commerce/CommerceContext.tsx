@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import { catalogProducts, customerProfiles, seedOrders, type CatalogProduct } from '../../mocks/commerce';
 import type { Customer } from '../../types/customer';

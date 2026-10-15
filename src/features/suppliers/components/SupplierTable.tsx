@@ -84,7 +84,6 @@ export function SupplierTable({
       title: 'Thao tác',
       key: 'actions',
       width: 170,
-      fixed: 'right',
       render: (_, supplier) => {
         const items: MenuProps['items'] = [{
           key: 'status',

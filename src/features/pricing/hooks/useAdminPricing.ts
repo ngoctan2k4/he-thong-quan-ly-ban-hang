@@ -1,5 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { mockPricingRepository } from '../../../mocks/adminPricingV1';
+import { pricingApiRepository } from '../pricing.api-repository';
 import type { PriceListFilters, PriceListFormValues, PriceTierFormValues } from '../pricing.model';
 
 const pricingQueryKey = ['admin-pricing-v1'] as const;
@@ -14,40 +14,40 @@ export function useAdminPricing(
   const invalidate = () => queryClient.invalidateQueries({ queryKey: pricingQueryKey });
   const listQuery = useQuery({
     queryKey: [...pricingQueryKey, 'list', filters, page, pageSize],
-    queryFn: () => mockPricingRepository.listPriceLists(filters, page, pageSize),
+    queryFn: () => pricingApiRepository.listPriceLists(filters, page, pageSize),
     placeholderData: keepPreviousData,
   });
   const detailQuery = useQuery({
     queryKey: [...pricingQueryKey, 'detail', selectedPriceListId],
-    queryFn: () => mockPricingRepository.getPriceList(selectedPriceListId as number),
+    queryFn: () => pricingApiRepository.getPriceList(selectedPriceListId as number),
     enabled: selectedPriceListId !== undefined,
   });
   const productsQuery = useQuery({
     queryKey: [...pricingQueryKey, 'products'],
-    queryFn: () => mockPricingRepository.listProductOptions(),
+    queryFn: () => pricingApiRepository.listProductOptions(),
   });
   const createPriceListMutation = useMutation({
-    mutationFn: (values: PriceListFormValues) => mockPricingRepository.createPriceList(values),
+    mutationFn: (values: PriceListFormValues) => pricingApiRepository.createPriceList(values),
     onSuccess: invalidate,
   });
   const updatePriceListMutation = useMutation({
-    mutationFn: ({ id, values }: { id: number; values: PriceListFormValues }) => mockPricingRepository.updatePriceList(id, values),
+    mutationFn: ({ id, values }: { id: number; values: PriceListFormValues }) => pricingApiRepository.updatePriceList(id, values),
     onSuccess: invalidate,
   });
   const statusMutation = useMutation({
-    mutationFn: ({ id, isActive }: { id: number; isActive: boolean }) => mockPricingRepository.updatePriceListStatus(id, isActive),
+    mutationFn: ({ id, isActive }: { id: number; isActive: boolean }) => pricingApiRepository.updatePriceListStatus(id, isActive),
     onSuccess: invalidate,
   });
   const createTierMutation = useMutation({
-    mutationFn: ({ priceListId, values }: { priceListId: number; values: PriceTierFormValues }) => mockPricingRepository.createTier(priceListId, values),
+    mutationFn: ({ priceListId, values }: { priceListId: number; values: PriceTierFormValues }) => pricingApiRepository.createTier(priceListId, values),
     onSuccess: invalidate,
   });
   const updateTierMutation = useMutation({
-    mutationFn: ({ id, values }: { id: number; values: PriceTierFormValues }) => mockPricingRepository.updateTier(id, values),
+    mutationFn: ({ id, values }: { id: number; values: PriceTierFormValues }) => pricingApiRepository.updateTier(id, values),
     onSuccess: invalidate,
   });
   const deleteTierMutation = useMutation({
-    mutationFn: (id: number) => mockPricingRepository.deleteTier(id),
+    mutationFn: (id: number) => pricingApiRepository.deleteTier(id),
     onSuccess: invalidate,
   });
 

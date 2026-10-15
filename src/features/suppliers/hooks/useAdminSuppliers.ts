@@ -1,12 +1,12 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { mockSupplierRepository } from '../../../mocks/adminSuppliers';
+import { suppliersApiRepository } from '../suppliers.api-repository';
 import type {
   AdminSupplierFilters,
   SupplierFormValues,
   SupplierProductFormValues,
 } from '../suppliers.model';
 
-const supplierRepository = mockSupplierRepository;
+const supplierRepository = suppliersApiRepository;
 const adminSuppliersQueryKey = ['admin-suppliers'] as const;
 
 interface UseAdminSuppliersParams {

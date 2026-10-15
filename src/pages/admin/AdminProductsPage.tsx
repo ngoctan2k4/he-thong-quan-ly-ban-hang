@@ -1,6 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { App, Button, Flex, Skeleton, Spin, Typography } from 'antd';
+import { Alert, App, Button, Flex, Skeleton, Space, Spin, Typography } from 'antd';
 import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AdminListPage } from '../../components/admin/AdminListPage';
 import { ConfirmModal } from '../../components/common/ConfirmModal';
 import { ErrorState } from '../../components/common/ErrorState';
@@ -9,13 +10,14 @@ import type {
   AdminProductRecord,
   ProductFormMode,
   ProductFormValues,
+  ProductSupplierFormValues,
 } from '../../features/products/adminProducts.model';
 import { initialAdminProductFilters } from '../../features/products/adminProducts.model';
 import '../../features/products/adminProducts.css';
-import { ProductDetailDrawer } from '../../features/products/components/ProductDetailDrawer';
+import { ProductProfileDrawer } from '../../features/products/components/ProductProfileDrawer';
 import { ProductFilters } from '../../features/products/components/ProductFilters';
 import { ProductFormDrawer } from '../../features/products/components/ProductFormDrawer';
-import { ProductTable } from '../../features/products/components/ProductTable';
+import { ProductIndexTable } from '../../features/products/components/ProductIndexTable';
 import { useAdminProductsMock } from '../../features/products/hooks/useAdminProductsMock';
 import type { ProductConversionFormValues } from '../../features/products/products.repository';
 
@@ -25,6 +27,7 @@ interface PendingStatusChange {
 
 export function AdminProductsPage() {
   const { message } = App.useApp();
+  const navigate = useNavigate();
   const [filters, setFilters] = useState<AdminProductFilters>(initialAdminProductFilters);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -38,16 +41,23 @@ export function AdminProductsPage() {
     listQuery,
     referencesQuery,
     conversionsQuery,
+    suppliersQuery,
+    supplierReferencesQuery,
     createProduct,
     updateProduct,
     updateActive,
     createConversion,
     updateConversion,
     deleteConversion,
+    createSupplier,
+    updateSupplier,
+    deleteSupplier,
     isSavingProduct,
     isUpdatingStatus,
     isSavingConversion,
     isDeletingConversion,
+    isSavingSupplier,
+    isDeletingSupplier,
   } = useAdminProductsMock({ filters, page, pageSize, selectedProductId: selectedProduct?.id });
 
   const handleFilterChange = useCallback((nextFilters: AdminProductFilters) => {
@@ -61,6 +71,10 @@ export function AdminProductsPage() {
   }, []);
 
   const openCreateDrawer = () => {
+    if (referencesQuery.data && (referencesQuery.data.categories.length === 0 || referencesQuery.data.units.length === 0)) {
+      void message.warning('Hãy tạo nhóm hàng và đơn vị tính trước khi thêm sản phẩm.');
+      return;
+    }
     setSelectedProduct(undefined);
     setFormMode('create');
     setFormOpen(true);
@@ -135,10 +149,36 @@ export function AdminProductsPage() {
     }
   };
 
+  const handleSaveSupplier = async (values: ProductSupplierFormValues, relationId?: number) => {
+    if (!selectedProduct) return false;
+    try {
+      if (relationId === undefined) await createSupplier({ productId: selectedProduct.id, values });
+      else await updateSupplier({ productId: selectedProduct.id, relationId, values });
+      void message.success(relationId === undefined ? 'Đã thêm nhà cung cấp.' : 'Đã cập nhật thông tin mua hàng.');
+      return true;
+    } catch (error) {
+      void message.error(error instanceof Error ? error.message : 'Không thể lưu thông tin mua hàng.');
+      return false;
+    }
+  };
+
+  const handleDeleteSupplier = async (relationId: number) => {
+    if (!selectedProduct) return false;
+    try {
+      await deleteSupplier({ productId: selectedProduct.id, relationId });
+      void message.success('Đã bỏ nhà cung cấp khỏi sản phẩm.');
+      return true;
+    } catch (error) {
+      void message.error(error instanceof Error ? error.message : 'Không thể bỏ nhà cung cấp.');
+      return false;
+    }
+  };
+
   const listResult = listQuery.data;
   const products = listResult?.content ?? [];
   const total = listResult?.totalElements ?? 0;
   const references = referencesQuery.data ?? { categories: [], units: [], brands: [] };
+  const missingReferences = !referencesQuery.isLoading && (references.categories.length === 0 || references.units.length === 0);
 
   return (
     <div className="admin-products-page">
@@ -172,6 +212,16 @@ export function AdminProductsPage() {
           </Flex>
         }
       >
+        {missingReferences ? (
+          <Alert
+            className="admin-products__setup-alert"
+            showIcon
+            type="warning"
+            message="Cần hoàn tất dữ liệu nền trước khi thêm sản phẩm"
+            description="Sản phẩm phải có ít nhất một nhóm hàng và một đơn vị tính đang hoạt động."
+            action={<Space wrap>{references.categories.length === 0 ? <Button size="small" onClick={() => navigate('/admin/categories')}>Tạo nhóm hàng</Button> : null}{references.units.length === 0 ? <Button size="small" onClick={() => navigate('/admin/units')}>Tạo đơn vị tính</Button> : null}</Space>}
+          />
+        ) : null}
         {listQuery.isLoading ? (
           <div style={{ padding: 24 }}>
             <Skeleton active paragraph={{ rows: 8 }} />
@@ -180,13 +230,13 @@ export function AdminProductsPage() {
 
         {listQuery.isError ? (
           <ErrorState
-            message="Không thể tải danh sách sản phẩm mock. Hãy thử tải lại dữ liệu."
+            message="Không thể tải danh sách sản phẩm từ máy chủ. Hãy thử lại."
             onRetry={() => void listQuery.refetch()}
           />
         ) : null}
 
         {!listQuery.isLoading && !listQuery.isError ? (
-          <ProductTable
+          <ProductIndexTable
             products={products}
             loading={listQuery.isFetching}
             page={page}
@@ -204,18 +254,26 @@ export function AdminProductsPage() {
         ) : null}
       </AdminListPage>
 
-      <ProductDetailDrawer
+      <ProductProfileDrawer
         open={detailOpen}
         product={selectedProduct}
         references={references}
         conversions={conversionsQuery.data ?? []}
+        suppliers={suppliersQuery.data ?? []}
+        supplierReferences={supplierReferencesQuery.data ?? []}
         conversionsLoading={conversionsQuery.isLoading}
+        suppliersLoading={suppliersQuery.isLoading}
         conversionSaving={isSavingConversion}
         conversionDeleting={isDeletingConversion}
+        supplierSaving={isSavingSupplier}
+        supplierDeleting={isDeletingSupplier}
         onClose={() => setDetailOpen(false)}
         onEdit={openEditDrawer}
         onSaveConversion={handleSaveConversion}
         onDeleteConversion={handleDeleteConversion}
+        onSaveSupplier={handleSaveSupplier}
+        onDeleteSupplier={handleDeleteSupplier}
+        onOpenSuppliers={() => navigate('/admin/suppliers')}
       />
 
       <ProductFormDrawer

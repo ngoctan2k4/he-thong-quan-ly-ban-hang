@@ -32,6 +32,7 @@ export interface SupplierProductFormValues {
   productId: number;
   lastPurchasePrice: number;
   leadTimeDays: number;
+  isDefaultSupplier: boolean;
 }
 
 export interface ProductReference {

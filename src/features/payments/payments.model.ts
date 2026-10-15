@@ -53,7 +53,7 @@ export interface PaymentDataset {
   transactions: PaymentTransaction[];
 }
 
-export interface PaymentReferenceData extends Omit<PaymentDataset, 'transactions'> {}
+export type PaymentReferenceData = Omit<PaymentDataset, 'transactions'>;
 
 export interface TransactionListItem extends PaymentTransaction {
   partnerCode: string;

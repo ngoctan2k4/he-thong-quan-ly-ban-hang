@@ -95,7 +95,7 @@ function AdminAiDataPage({ variant }: { variant: Exclude<AiPageVariant, 'chat'> 
       { title: 'Nhận định', dataIndex: 'summary', width: 360 },
       { title: 'Trạng thái', dataIndex: 'status', width: 150, render: (value: string) => <Tag>{value}</Tag> },
       { title: 'Phát hiện', dataIndex: 'detectedAt', width: 170, render: dateTime },
-      { title: '', width: 80, fixed: 'right', render: (_, row) => <Button type="link" onClick={() => setSelected(row)}>Xem</Button> },
+      { title: '', width: 80, render: (_, row) => <Button type="link" onClick={() => setSelected(row)}>Xem</Button> },
     ];
     if (variant === 'proposals') return [
       { title: 'Mã', dataIndex: 'code', width: 170 },
@@ -104,7 +104,7 @@ function AdminAiDataPage({ variant }: { variant: Exclude<AiPageVariant, 'chat'> 
       { title: 'Tác động', dataIndex: 'impact', width: 380 },
       { title: 'Trạng thái', dataIndex: 'status', width: 170, render: (value: AiProposalRow['status']) => <Tag color={value === 'APPROVED' ? 'green' : value === 'REJECTED' ? 'red' : value === 'PENDING_APPROVAL' ? 'gold' : 'default'}>{value}</Tag> },
       { title: 'Ngày tạo', dataIndex: 'createdAt', width: 170, render: dateTime },
-      { title: '', width: 80, fixed: 'right', render: (_, row) => <Button type="link" onClick={() => setSelected(row)}>Xem</Button> },
+      { title: '', width: 80, render: (_, row) => <Button type="link" onClick={() => setSelected(row)}>Xem</Button> },
     ];
     return [
       { title: 'Thời gian', dataIndex: 'calledAt', width: 180, render: dateTime },
@@ -113,7 +113,7 @@ function AdminAiDataPage({ variant }: { variant: Exclude<AiPageVariant, 'chat'> 
       { title: 'Mục đích', dataIndex: 'purpose', width: 320 },
       { title: 'Thời gian xử lý', dataIndex: 'durationMs', width: 160, align: 'right', render: (value: number) => `${value} ms` },
       { title: 'Kết quả', dataIndex: 'status', width: 120, render: (value: ToolCallRow['status']) => <Tag color={value === 'SUCCESS' ? 'green' : 'red'}>{value}</Tag> },
-      { title: '', width: 80, fixed: 'right', render: (_, row) => <Button type="link" onClick={() => setSelected(row)}>Xem</Button> },
+      { title: '', width: 80, render: (_, row) => <Button type="link" onClick={() => setSelected(row)}>Xem</Button> },
     ];
   }, [variant]);
 

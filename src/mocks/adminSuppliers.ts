@@ -182,11 +182,17 @@ async function linkProduct(
     throw new Error('Sản phẩm đã được liên kết với nhà cung cấp này.');
   }
   const relation: SupplierProduct = {
-    ...values,
+    productId: values.productId,
+    lastPurchasePrice: values.lastPurchasePrice,
+    leadTimeDays: values.leadTimeDays,
     id: Math.max(...relations.map((item) => item.id), 0) + 1,
     supplierId,
   };
   relations = [...relations, relation];
+  if (values.isDefaultSupplier) {
+    const product = productReferences.find((item) => item.id === values.productId);
+    if (product) product.defaultSupplierId = supplierId;
+  }
   return toProductView(relation);
 }
 
@@ -200,8 +206,11 @@ async function updateProductLink(
   if (!current) {
     throw new Error('Không tìm thấy liên kết sản phẩm cần cập nhật.');
   }
-  const updated = { ...current, ...values, supplierId, id: relationId };
+  const updated = { ...current, productId: values.productId, lastPurchasePrice: values.lastPurchasePrice, leadTimeDays: values.leadTimeDays, supplierId, id: relationId };
   relations = relations.map((item) => item.id === relationId ? updated : item);
+  const product = productReferences.find((item) => item.id === values.productId);
+  if (product && values.isDefaultSupplier) product.defaultSupplierId = supplierId;
+  else if (product?.defaultSupplierId === supplierId) product.defaultSupplierId = undefined;
   return toProductView(updated);
 }
 

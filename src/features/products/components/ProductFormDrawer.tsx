@@ -59,7 +59,7 @@ export function ProductFormDrawer({ open, mode, product, references, hasConversi
       <Row gutter={16}>
         <Col xs={24} sm={8}><Form.Item name="retailPrice" label="Giá bán lẻ" rules={[{ required: true, message: 'Nhập giá bán lẻ.' }, { type: 'number', min: 0, message: 'Giá bán lẻ phải lớn hơn hoặc bằng 0.' }]}><InputNumber min={0} step={1000} addonAfter="₫" style={{ width: '100%' }} /></Form.Item></Col>
         <Col xs={24} sm={8}><Form.Item name="wholesalePrice" label="Giá bán sỉ" rules={[{ required: true, message: 'Nhập giá bán sỉ.' }, { type: 'number', min: 0, message: 'Giá bán sỉ phải lớn hơn hoặc bằng 0.' }]}><InputNumber min={0} step={1000} addonAfter="₫" style={{ width: '100%' }} /></Form.Item></Col>
-        <Col xs={24} sm={8}><Form.Item name="moq" label="MOQ" rules={[{ required: true, message: 'Nhập MOQ.' }, { type: 'number', min: 1, message: 'MOQ phải lớn hơn 0.' }]}><InputNumber min={1} precision={0} style={{ width: '100%' }} /></Form.Item></Col>
+        <Col xs={24} sm={8}><Form.Item name="moq" label="MOQ khách sỉ" tooltip="Số lượng tối thiểu khách sỉ phải mua" rules={[{ required: true, message: 'Nhập MOQ khách sỉ.' }, { type: 'number', min: 1, message: 'MOQ phải lớn hơn 0.' }]}><InputNumber min={1} precision={0} style={{ width: '100%' }} /></Form.Item></Col>
       </Row>
       <Divider orientation="left">Quản lý tồn</Divider>
       <Row gutter={16}>

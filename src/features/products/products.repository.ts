@@ -6,6 +6,9 @@ import type {
   ProductConversionView,
   ProductFormValues,
   ProductReferences,
+  ProductSupplierFormValues,
+  ProductSupplierView,
+  SupplierReferenceOption,
 } from './adminProducts.model';
 
 export interface ProductConversionFormValues {
@@ -24,4 +27,9 @@ export interface AdminProductsRepository {
   createConversion(productId: number, values: ProductConversionFormValues): Promise<ProductConversionView>;
   updateConversion(id: number, factor: number): Promise<ProductConversionView>;
   deleteConversion(id: number): Promise<void>;
+  listSupplierReferences(): Promise<SupplierReferenceOption[]>;
+  listSuppliers(productId: number): Promise<ProductSupplierView[]>;
+  createSupplier(productId: number, values: ProductSupplierFormValues): Promise<ProductSupplierView>;
+  updateSupplier(productId: number, relationId: number, values: ProductSupplierFormValues): Promise<ProductSupplierView>;
+  deleteSupplier(productId: number, relationId: number): Promise<void>;
 }

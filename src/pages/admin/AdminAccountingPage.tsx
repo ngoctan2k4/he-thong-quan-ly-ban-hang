@@ -140,7 +140,7 @@ export function AdminAccountingPage({ variant }: AdminAccountingPageProps) {
     { title: 'Tổng cộng', dataIndex: 'total', width: 170, align: 'right', className: 'accounting-money', render: (value: number) => <Typography.Text strong>{formatMoney(value)}</Typography.Text> },
     { title: 'Thanh toán', dataIndex: 'paymentStatus', width: 190, render: (value: PaymentStatus) => <Tag color={paymentMeta[value].color}>{paymentMeta[value].label}</Tag> },
     { title: 'Trạng thái', dataIndex: 'status', width: 150, render: (value: AccountingStatus) => <Tag color={statusMeta[value].color}>{statusMeta[value].label}</Tag> },
-    { title: 'Thao tác', key: 'action', width: 90, fixed: 'right', render: (_, row) => <Button type="link" onClick={() => setSelected(row)}>Xem</Button> },
+    { title: 'Thao tác', key: 'action', width: 90, render: (_, row) => <Button type="link" onClick={() => setSelected(row)}>Xem</Button> },
   ];
 
   const openCreateForm = () => {

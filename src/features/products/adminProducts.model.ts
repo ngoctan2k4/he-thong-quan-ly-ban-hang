@@ -78,6 +78,27 @@ export interface ProductConversionView extends ProductUnitConversion {
   unitName: string;
 }
 
+export interface ProductSupplierView {
+  id: number;
+  supplierId: number;
+  productId: number;
+  supplierCode: string;
+  supplierName: string;
+  supplierIsActive: boolean;
+  lastPurchasePrice: number;
+  leadTimeDays: number;
+  isDefaultSupplier: boolean;
+}
+
+export interface ProductSupplierFormValues {
+  supplierId: number;
+  lastPurchasePrice: number;
+  leadTimeDays: number;
+  isDefaultSupplier: boolean;
+}
+
+export type SupplierReferenceOption = ProductReferenceOption;
+
 export const initialAdminProductFilters: AdminProductFilters = {
   keyword: '',
   categoryId: undefined,

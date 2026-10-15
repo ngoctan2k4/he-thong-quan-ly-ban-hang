@@ -1,7 +1,9 @@
-/* Hallmark · macrostructure: Workbench · genre: modern-minimal · theme: existing Ant Design
+/* Hallmark · macrostructure: Index-First · genre: modern-minimal · theme: existing Ant Design
  * tone: utilitarian enterprise · anchor hue: cobalt blue · enrichment: none
  * pre-emit critique: P5 H5 E5 S5 R5 V4
- * contrast: pass · slop: pass
+ * contrast: pass (40–41) · nav: N3 · footer: none · slop: pass (42–45)
+ * honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (49) · icons: pass (30)
+ * mobile: pass (34, 49, 50–57)
  */
 
 .admin-list-page,
@@ -66,6 +68,141 @@
   min-height: 24px;
 }
 
+.admin-products__setup-alert {
+  margin: 0 var(--space-md) var(--space-lg);
+}
+
+.admin-products__profile-head {
+  display: grid;
+  gap: var(--space-lg);
+  min-width: 0;
+}
+
+.admin-products__profile-copy {
+  min-width: 0;
+}
+
+.admin-products__profile-copy .ant-typography {
+  margin-block: 0 var(--space-xs);
+  overflow-wrap: anywhere;
+}
+
+.admin-products__profile-metrics {
+  display: grid;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+  border: var(--rule-thin) solid var(--color-rule);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-subtle);
+}
+
+.admin-products__profile-metrics > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.admin-products__profile-metrics > div + div {
+  border-block-start: var(--rule-thin) solid var(--color-rule);
+}
+
+.admin-products__profile-metrics span,
+.admin-products__purchase-summary .ant-typography-secondary {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.admin-products__profile-metrics strong {
+  overflow: hidden;
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-products__detail-tabs .ant-tabs-tab-btn,
+.admin-products__purchase-summary .ant-btn,
+.admin-products__row-actions .ant-btn {
+  white-space: nowrap;
+}
+
+.admin-products__detail-section > .ant-typography {
+  margin-block: 0 var(--space-md);
+}
+
+.admin-products__purchase-summary {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  border: var(--rule-thin) solid var(--color-rule);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-subtle);
+}
+
+.admin-products__purchase-summary > div {
+  min-width: 0;
+}
+
+.admin-products__purchase-summary .ant-typography-heading {
+  margin-block: var(--space-xs);
+  overflow-wrap: anywhere;
+}
+
+.admin-products__purchase-summary .ant-btn {
+  align-self: flex-start;
+}
+
+.admin-products__drawer-loading {
+  padding-block: var(--space-2xl);
+}
+
+.admin-products-page :focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .admin-products__row-actions .ant-btn:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@media (min-width: 40rem) {
+  .admin-products__setup-alert {
+    margin-inline: var(--space-xl);
+  }
+
+  .admin-products__profile-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-products__profile-metrics > div + div {
+    border-block-start: 0;
+    border-inline-start: var(--rule-thin) solid var(--color-rule);
+  }
+
+  .admin-products__purchase-summary {
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .admin-products__purchase-summary .ant-btn {
+    align-self: auto;
+  }
+}
+
+@media (min-width: 48rem) {
+  .admin-products__profile-head {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 0.9fr);
+    align-items: end;
+  }
+}
+
 @media (max-width: 40rem) {
   .admin-products__row-actions .ant-btn:not(.ant-dropdown-trigger) span:not(.anticon) {
     display: none;
@@ -74,6 +211,14 @@
   .admin-products__empty {
     min-height: 220px;
     padding: 32px 16px;
+  }
+
+}
+
+@media (pointer: coarse) {
+  .admin-products-page .ant-btn,
+  .admin-products__detail-tabs .ant-tabs-tab {
+    min-height: 44px;
   }
 }
 

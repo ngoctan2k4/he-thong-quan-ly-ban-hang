@@ -36,7 +36,7 @@ export function AdminApprovalsPage({ type = 'ALL' }: { type?: ApprovalTypeFilter
     { title: 'Rủi ro', dataIndex: 'risk', width: 110, render: (value: ApprovalRow['risk']) => <Tag color={value === 'HIGH' ? 'red' : value === 'MEDIUM' ? 'gold' : 'green'}>{value}</Tag> },
     { title: 'Trạng thái', dataIndex: 'status', width: 130, render: (value: ApprovalRow['status']) => <Tag color={value === 'APPROVED' ? 'green' : value === 'REJECTED' ? 'red' : 'gold'}>{value}</Tag> },
     { title: 'Ngày gửi', dataIndex: 'requestedAt', width: 170, render: (value: string) => new Intl.DateTimeFormat('vi-VN', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value)) },
-    { title: '', width: 80, fixed: 'right', render: (_, row) => <Button type="link" onClick={() => setSelected(row)}>Xử lý</Button> },
+    { title: '', width: 80, render: (_, row) => <Button type="link" onClick={() => setSelected(row)}>Xử lý</Button> },
   ];
 
   const decide = (status: 'APPROVED' | 'REJECTED') => {

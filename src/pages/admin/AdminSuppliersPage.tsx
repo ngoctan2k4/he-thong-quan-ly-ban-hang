@@ -173,7 +173,7 @@ export function AdminSuppliersPage() {
       >
         {listQuery.isLoading ? <div className="admin-entity__loading"><Skeleton active paragraph={{ rows: 8 }} /></div> : null}
         {listQuery.isError ? (
-          <ErrorState message="Không thể tải danh sách nhà cung cấp mock." onRetry={() => void listQuery.refetch()} />
+          <ErrorState message="Không thể tải danh sách nhà cung cấp từ máy chủ." onRetry={() => void listQuery.refetch()} />
         ) : null}
         {!listQuery.isLoading && !listQuery.isError ? (
           <SupplierTable

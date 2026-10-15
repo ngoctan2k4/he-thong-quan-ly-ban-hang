@@ -15,8 +15,10 @@ interface UserFormDrawerProps {
 
 export function UserFormDrawer({ open, mode, user, references, loading = false, onClose, onSubmit }: UserFormDrawerProps) {
   const [form] = Form.useForm<UserFormValues>();
-  const selectedBranchIds = Form.useWatch('branchIds', form) ?? [];
-  const selectedWarehouseIds = Form.useWatch('warehouseIds', form) ?? [];
+  const watchedBranchIds = Form.useWatch('branchIds', form);
+  const watchedWarehouseIds = Form.useWatch('warehouseIds', form);
+  const selectedBranchIds = useMemo(() => watchedBranchIds ?? [], [watchedBranchIds]);
+  const selectedWarehouseIds = useMemo(() => watchedWarehouseIds ?? [], [watchedWarehouseIds]);
   useEffect(() => {
     if (!open) return;
     form.setFieldsValue(user ? {

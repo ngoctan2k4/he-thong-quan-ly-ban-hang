@@ -3,11 +3,24 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "scripts": {
     "dev": "vite",
+    "dev:server": "npm --prefix server run dev",
     "build": "tsc -b && vite build",
+    "build:server": "npm --prefix server run build",
+    "build:all": "npm run build && npm run build:server",
+    "start": "npm --prefix server start",
+    "test:server": "npm --prefix server test",
+    "db:seed": "npm --prefix server run db:seed",
+    "docker:up": "docker compose up --build -d",
+    "docker:logs": "docker compose logs -f app",
+    "docker:down": "docker compose down",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint . --max-warnings 0",
+    "check": "npm run lint && npm run build:all && npm run test:server"
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",

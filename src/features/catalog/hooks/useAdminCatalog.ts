@@ -1,5 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { mockCatalogRepository } from '../../../mocks/adminCatalogV1';
+import { catalogApiRepository } from '../catalog.api-repository';
 import type {
   BranchFilters,
   BranchFormValues,
@@ -11,7 +11,7 @@ import type {
   WarehouseFormValues,
 } from '../catalog.model';
 
-const repository = mockCatalogRepository;
+const repository = catalogApiRepository;
 export const adminCatalogQueryKey = ['admin-catalog-v1'] as const;
 
 export function useCatalogReferences() {

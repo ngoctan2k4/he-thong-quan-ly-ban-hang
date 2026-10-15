@@ -110,7 +110,6 @@ export function CustomerTable({
       title: 'Thao tác',
       key: 'actions',
       width: 170,
-      fixed: 'right',
       render: (_, customer) => {
         const items: MenuProps['items'] = [
           {

@@ -140,4 +140,9 @@ export const mockAdminProductsRepository: AdminProductsRepository = {
     return { ...conversion, unitName: getMockUnitsSnapshot().find((unit) => unit.id === conversion.unitId)?.name ?? `#${conversion.unitId}` };
   },
   deleteConversion: deleteMockConversion,
+  async listSupplierReferences() { return []; },
+  async listSuppliers() { return []; },
+  async createSupplier() { throw new Error('Mock nhà cung cấp không còn được sử dụng.'); },
+  async updateSupplier() { throw new Error('Mock nhà cung cấp không còn được sử dụng.'); },
+  async deleteSupplier() { throw new Error('Mock nhà cung cấp không còn được sử dụng.'); },
 };

@@ -2,9 +2,15 @@
 :root {
   --color-accent: oklch(33% 0.12 264);
   --color-paper: oklch(98% 0.01 264);
-  --color-surface: oklch(100% 0 0);
+  --color-surface: oklch(99% 0.004 264);
+  --color-surface-subtle: oklch(96% 0.012 264);
+  --color-surface-selected: oklch(94% 0.025 264);
   --color-rule: oklch(90% 0.02 264);
+  --color-rule-strong: oklch(78% 0.035 264);
   --color-ink: oklch(24% 0.04 264);
+  --color-muted: oklch(48% 0.035 264);
+  --color-focus: oklch(48% 0.18 264);
+  --color-accent-ink: oklch(98% 0.01 264);
   --font-display: "Be Vietnam Pro", Inter, system-ui, sans-serif;
   --font-body: "Be Vietnam Pro", Inter, system-ui, sans-serif;
   --space-xs: 4px;
@@ -12,6 +18,7 @@
   --space-md: 12px;
   --space-lg: 16px;
   --space-xl: 24px;
+  --space-2xl: 32px;
   --text-sm: 13px;
   --text-md: 14px;
   --text-lg: 16px;
@@ -20,6 +27,7 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-fast: 120ms;
   --dur-base: 180ms;
+  --dur-long: 300ms;
   --rule-thin: 1px;
   --radius-sm: 8px;
   --radius-md: 10px;

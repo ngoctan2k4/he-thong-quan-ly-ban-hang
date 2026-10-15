@@ -199,7 +199,7 @@ const seedCreditAccounts: CreditAccount[] = [
 
 let customers = seedCustomers.map((customer) => ({ ...customer }));
 let addresses = seedAddresses.map((address) => ({ ...address }));
-let creditAccounts = seedCreditAccounts.map((account) => ({ ...account }));
+const creditAccounts = seedCreditAccounts.map((account) => ({ ...account }));
 
 function wait(duration = 280): Promise<void> {
   return new Promise((resolve) => window.setTimeout(resolve, duration));
